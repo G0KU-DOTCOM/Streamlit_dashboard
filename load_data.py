@@ -23,4 +23,17 @@ def load_data():
     "endring_fyllingsgrad": "weekly_filling_change"     
     }
 
-    return reservoirs.rename(columns=english_names)
+    # I rename the columns before preparing the observation date for filtering.
+    reservoirs = reservoirs.rename(columns=english_names)
+
+    # The observation date must be a datetime value before I can select a month.
+    reservoirs["observation_date"] = pd.to_datetime(
+        reservoirs["observation_date"])
+
+    # The year-1 value was used before the publication-date variable was introduced.
+    # I convert it to a missing datetime value so it is not shown as a real date.
+    reservoirs["next_publication_date"] = pd.to_datetime(
+        reservoirs["next_publication_date"].replace("0001-01-01T00:00:00", pd.NA))
+
+
+    return reservoirs
