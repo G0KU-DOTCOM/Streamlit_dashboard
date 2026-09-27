@@ -5,22 +5,15 @@ from load_data import load_data
 
 st.title("Reservoir Data Plot")
 st.write(
-    "Choose a reservoir measurement and a range of months to display."
+    "Choose a column and a range of months to display."
 )
 
 # I use the cached function so the CSV is not read again
 # whenever the user changes one of the selections.
 reservoirs = load_data()
+csv_columns = reservoirs.columns.tolist()
 
-# The national observations give me one continuous series per measurement.
-national_data = (
-    reservoirs[reservoirs["area_type"] == "NO"]
-    .sort_values("observation_date")
-    .copy()
-)
-
-# I only include columns that represent measurements and therefore
-# make sense to display as lines over time.
+# These columns contain the measurements that can be compared as lines.
 measurement_columns = [
     "filling_fraction",
     "capacity_twh",
@@ -31,13 +24,20 @@ measurement_columns = [
 
 selected_column = st.selectbox(
     "Choose a column",
-    options=["All columns"] + measurement_columns,
+    options=["All columns"] + csv_columns,
 )
 
-# I create year-month labels so the user can select complete months.
-national_data["month"] = (
-    national_data["observation_date"].dt.strftime("%Y-%m")
+# I add a temporary month label for filtering without changing the CSV file.
+all_data = reservoirs.copy()
+all_data["month"] = all_data["observation_date"].dt.strftime("%Y-%m")
+
+# The national observations give me one continuous series per measurement.
+national_data = (
+    all_data[all_data["area_type"] == "NO"]
+    .sort_values("observation_date")
+    .copy()
 )
+
 month_options = national_data["month"].drop_duplicates().tolist()
 
 selected_months = st.select_slider(
@@ -48,29 +48,85 @@ selected_months = st.select_slider(
 
 start_month, end_month = selected_months
 
-filtered_data = national_data[
+filtered_national_data = national_data[
     national_data["month"].between(start_month, end_month)
 ]
+filtered_all_data = all_data[
+    all_data["month"].between(start_month, end_month)
+]
 
-# One selected column gives one line, while "All columns"
-# displays all reservoir measurements in the same chart.
-columns_to_plot = (
-    measurement_columns
-    if selected_column == "All columns"
-    else [selected_column]
-)
+st.subheader(f"Data from {start_month} to {end_month}")
 
-st.subheader(f"National reservoir data from {start_month} to {end_month}")
+if selected_column == "All columns":
+    # Dates, categories and identifiers cannot share a meaningful y-axis,
+    # so the combined view contains the five actual measurements.
+    st.line_chart(
+        filtered_national_data,
+        x="observation_date",
+        y=measurement_columns,
+        x_label="Observation date",
+        y_label="Value on original scale",
+    )
+    st.caption(
+        "The combined view contains the measurement columns. Descriptive "
+        "columns can be selected individually from the menu."
+    )
 
-st.line_chart(
-    filtered_data,
-    x="observation_date",
-    y=columns_to_plot,
-    x_label="Observation date",
-    y_label="Value on original scale",
-)
+elif selected_column == "area_type":
+    area_counts = (
+        filtered_all_data["area_type"]
+        .value_counts()
+        .rename_axis("area_type")
+        .reset_index(name="number_of_rows")
+    )
+    st.bar_chart(
+        area_counts,
+        x="area_type",
+        y="number_of_rows",
+        x_label="Area type",
+        y_label="Number of rows",
+    )
 
-st.caption(
-    "Only measurement columns are included because dates, area names and "
-    "identification columns are not measurements that can be compared as lines."
-)
+elif selected_column == "observation_date":
+    observation_counts = (
+        filtered_all_data.groupby("observation_date")
+        .size()
+        .reset_index(name="number_of_rows")
+    )
+    st.line_chart(
+        observation_counts,
+        x="observation_date",
+        y="number_of_rows",
+        x_label="Observation date",
+        y_label="Number of rows",
+    )
+
+elif selected_column == "next_publication_date":
+    publication_data = filtered_national_data.dropna(
+        subset=["next_publication_date"]
+    ).copy()
+
+    if publication_data.empty:
+        st.info("No publication dates were recorded during this period.")
+    else:
+        publication_data["days_until_publication"] = (
+            publication_data["next_publication_date"]
+            - publication_data["observation_date"]
+        ).dt.total_seconds() / (24 * 60 * 60)
+
+        st.line_chart(
+            publication_data,
+            x="observation_date",
+            y="days_until_publication",
+            x_label="Observation date",
+            y_label="Days until publication",
+        )
+
+else:
+    st.line_chart(
+        filtered_national_data,
+        x="observation_date",
+        y=selected_column,
+        x_label="Observation date",
+        y_label=selected_column.replace("_", " ").title(),
+    )
