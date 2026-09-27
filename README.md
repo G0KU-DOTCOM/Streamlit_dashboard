@@ -24,4 +24,4 @@ streamlit run main.py
 ## Links
 
 - [GitHub repository](https://github.com/G0KU-DOTCOM/Streamlit_dashboard)
-- Streamlit application: The public link will be added after deployment.
+- [Streamlit application](https://ind320dashboard.streamlit.app)
