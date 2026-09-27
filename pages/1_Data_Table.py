@@ -1,14 +1,12 @@
 import streamlit as st
 from load_data import load_data
 
-# This page will later display the reservoir data as a table.
 st.title("Reservoir Data Table")
 
-# I load the cached dataset here to confirm that the table page can access it.
+# I use the cached loading function so the CSV is only read when necessary.
 reservoirs = load_data()
 
 st.write(f"The dataset contains {len(reservoirs):,} rows.")
-#st.dataframe(reservoirs.head())
 # The dataset contains several geographical rows for each week.
 # I use the national row so the first month becomes one continuous series.
 national_data = (
