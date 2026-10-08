@@ -21,6 +21,20 @@ the project folder:
 streamlit run main.py
 ```
 
+## Part 2 notebook progress
+
+`notebooks/prosjekt_part2.ipynb` contains separate sections for the Spark–Cassandra
+test, MongoDB test, a small NVE API sample, and the Part 1 figures recreated from
+NVE API history. Use the project's Python 3.12 environment. Section 4 can run on
+its own without Docker or database credentials.
+
+The history section caps the decoded API response at 8 MiB and caches it in the
+Git-ignored `no_sync/nve_cache/` directory. Leave `REFRESH_NVE_HISTORY = False` to
+reuse the snapshot without another download. The original comparison period is
+8 January 1995–6 September 2026. This section makes no database writes.
+
+The Streamlit app still uses its Part 1 CSV source until its API migration.
+
 ## Links
 
 - [GitHub repository](https://github.com/G0KU-DOTCOM/Streamlit_dashboard)
