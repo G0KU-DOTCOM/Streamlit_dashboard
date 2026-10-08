@@ -3,3 +3,4 @@
 __pycache__/
 .ipynb_checkpoints/
 /no_sync/
+.streamlit/secrets.toml
