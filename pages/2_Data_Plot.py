@@ -1,6 +1,6 @@
 import streamlit as st
 
-from load_data import load_data
+from load_data import load_data_or_stop
 
 
 st.title("Reservoir Data Plot")
@@ -8,10 +8,9 @@ st.write(
     "Choose a column and a range of months to display."
 )
 
-# I use the cached function so the CSV is not read again
-# whenever the user changes one of the selections.
-reservoirs = load_data()
-csv_columns = reservoirs.columns.tolist()
+# I share the cached API download across pages and widget selections.
+reservoirs = load_data_or_stop()
+data_columns = reservoirs.columns.tolist()
 
 # These columns contain the measurements that can be compared as lines.
 measurement_columns = [
@@ -24,10 +23,10 @@ measurement_columns = [
 
 selected_column = st.selectbox(
     "Choose a column",
-    options=["All columns"] + csv_columns,
+    options=["All columns"] + data_columns,
 )
 
-# I add a temporary month label for filtering without changing the CSV file.
+# I add a temporary month label without changing the cached API data.
 all_data = reservoirs.copy()
 all_data["month"] = all_data["observation_date"].dt.strftime("%Y-%m")
 

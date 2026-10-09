@@ -1,10 +1,10 @@
 import streamlit as st
-from load_data import load_data
+from load_data import load_data_or_stop
 
 st.title("Reservoir Data Table")
 
-# I use the cached loading function so the CSV is only read when necessary.
-reservoirs = load_data()
+# The API download is cached and shared with the other pages.
+reservoirs = load_data_or_stop()
 
 st.write(f"The dataset contains {len(reservoirs):,} rows.")
 # The dataset contains several geographical rows for each week.
@@ -15,6 +15,7 @@ national_data = (
 )
 
 first_date = national_data["observation_date"].min()
+first_month_label = first_date.strftime("%B %Y")
 
 first_month = national_data[
     national_data["observation_date"].dt.to_period("M")
@@ -79,22 +80,22 @@ for column in reservoirs.columns:
             "first_month_trend": trend_values,
         }
     )
-st.warning(
-    "The next publication date was not recorded during January 1995. "
-    "The original CSV uses 0001-01-01T00:00:00 for these rows, "
-    "which I convert to NaT in the application."
-)
+if first_month["next_publication_date"].isna().all():
+    st.info(
+        f"The next publication date was not recorded during {first_month_label}. "
+        "The API's year-1 sentinel is treated as a missing value (NaT)."
+    )
 
 st.dataframe(
     table_rows,
     column_config={
         "column": "Imported column",
         "data_type": "Data type",
-        "first_month_values": "Values from January 1995",
+        "first_month_values": f"Values from {first_month_label}",
         "first_month_trend": st.column_config.LineChartColumn(
-            "Trend during January 1995",
+            f"Trend during {first_month_label}",
             width="medium",
-            help="Four weekly national observations from January 1995.",
+            help=f"Weekly national observations from {first_month_label}.",
         ),
     },
     hide_index=True,

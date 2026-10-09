@@ -8,5 +8,6 @@ st.set_page_config(
 st.title("Norwegian Reservoir Dashboard")
 st.write(
     "This app presents historical data about Norwegian reservoir "
-    "levels, capacity and stored energy."
+    "levels, capacity and stored energy, downloaded directly from NVE's API. "
+    "Open Reservoir API in the sidebar to choose a period and area type."
 )
