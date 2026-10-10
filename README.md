@@ -9,7 +9,8 @@ longer requires a CSV file.
 - `notebooks/prosjekt_part1.ipynb`: archived Part 1 analysis and outputs. To rerun
   the original CSV analysis, use the [Part 1 repository snapshot](https://github.com/G0KU-DOTCOM/Streamlit_dashboard/tree/95a35b71c25d5e4c94405deea7462689a0b864c1).
 - `notebooks/prosjekt_part2.ipynb`: connection checks, NVE API inspection,
-  thirteen recreated Part 1 figures, and documentation of the API app.
+  thirteen recreated Part 1 figures, documentation of the API app, and a small
+  ENTSO-E cross-border API test.
 - `load_data.py`: shared API downloads, validation and Streamlit caching.
 - `main.py` and `pages/`: home, table, general plots, Reservoir API and About.
 
@@ -46,7 +47,13 @@ Leave `REFRESH_NVE_HISTORY = False` to reuse it. The comparison period is
 8 January 1995–6 September 2026. Section 5 documents the Streamlit changes and
 the adaptation needed for NVE's date-range limitation.
 
-Remaining work includes ENTSO-E cross-border data, Spark/Cassandra ingestion and
+Section 6 tests NO2–DK1 physical flows in both directions for 1 January 2026,
+using `[entsoe] token` from the same local secrets file. It limits each of two
+responses to 128 KiB and reuses XML cached in `no_sync/entsoe_cache/`. The test
+needs no running databases. It inspects raw A03 points; interval reconstruction
+and energy aggregation are the next step.
+
+Remaining work includes two years of ENTSO-E cross-border data, Spark/Cassandra ingestion and
 extraction, curated MongoDB data, the transfer page, final log and screencast.
 Local changes must be published to GitHub before they appear in the hosted app.
 
