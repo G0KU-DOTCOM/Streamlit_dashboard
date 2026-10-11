@@ -73,7 +73,7 @@ The planned caps are 100 MiB new XML downloads, 128 MiB cache, 1.3 million nativ
 intervals, 64 MiB curated data plus indexes, and 256 MiB whole-cluster MongoDB
 usage. `entsoe_budget.py` now enforces persistent download/cache/attempt limits,
 request spacing and minimum free host space. Raw-row and database-volume guards
-still need implementation before bulk ingestion.
+are now provided by `entsoe_storage.py`; the bulk coordinator must call them.
 The planning step makes no data downloads or database writes. A separate
 read-only Atlas audit found one 86-byte test document and 36,864 index bytes.
 Fresh storage checks are required before any future upload.
@@ -97,8 +97,54 @@ budget use. Interrupted requests retain reserved bytes and block new downloads
 until reviewed. Failed requests are not automatically retried. Keep the ledger
 when rerunning; deleting it would discard the cumulative accounting.
 
-Remaining work includes the full two-year collection of ENTSO-E cross-border data, Spark/Cassandra ingestion and
-extraction, curated MongoDB data, the transfer page, final log and screencast.
+Section 10 records a live Spark storage audit: all 29,020 existing flow rows
+match the cached 2025 snapshot; zero new rows were needed. `entsoe_storage.py`
+now guards section 7 writes with actual row counts, allocated volume, host and
+Docker free space, and conservative working-space reservations. Identical rows
+are skipped; changed snapshots are blocked for review. New writes are flushed
+and reread before post-write size checks. Batches must contain complete intended
+partitions. The local lock coordinates project writers, not unrelated clients.
+The limits are admission checks, not a filesystem quota. The bulk coordinator is now implemented in `entsoe_bulk.py`;
+MongoDB upload guards remain to be implemented.
+
+Section 11 completes all 54 planned API/partition jobs using `entsoe_bulk.py`:
+479,845 native intervals in Cassandra; 17,520 hours per direction on all nine
+borders. Final Spark reads confirm exact window boundaries, no gaps/overlaps,
+and matching row counts and MWh totals. New bulk XML totalled 53.79 MiB;
+allocated Cassandra volume at final verification was 37.40 MiB. These
+are measured snapshots, not fixed future sizes. The table and comparison plot
+are executed from the saved Spark verification. No MongoDB writes were made.
+
+Run `.venv/bin/python entsoe_bulk.py` to inspect saved progress. `--execute`
+permits bounded downloads and guarded local writes; verified jobs are reused,
+with cache hashes checked, and the final database is verified again. Keep the
+Git-ignored download ledger, cache and `no_sync/entsoe_bulk_report.json` when
+resuming. Missing/revised cache or failed coverage requires review, not a budget
+reset. The frozen period and Russia scope limitation remain as documented.
+
+Section 12 completes Spark hourly curation in `entsoe_hourly.py`. It splits
+native MW blocks at UTC-hour boundaries and pairs both directions, retaining
+coverage minutes and nulls for missing energy. All 157,680 documents have full
+coverage; all 18 direction totals match the raw energy within numerical tolerance.
+The local file `no_sync/entsoe_curated/hourly_flows.bson` contains 29,135,760
+measured BSON bytes (27.79 MiB), excluding indexes. A 2× planning allowance is
+55.57 MiB, below the 64 MiB project budget; this is not an Atlas usage measurement.
+The saved file was independently read back for IDs, coverage, totals and checksum.
+No database writes or new API downloads were made during curation.
+
+Run `.venv/bin/python entsoe_hourly.py` with Cassandra running to regenerate
+this local artifact. To run the synthetic Spark math checks in addition to the
+regular offline tests:
+
+```bash
+RUN_SPARK_TESTS=1 .venv/bin/python -m unittest discover -s tests -p test_entsoe_hourly.py -v
+```
+
+Both Spark driver and workers use the project's Python 3.12 environment. Fresh Atlas checks and an uploader
+with rate/size guards are required before any MongoDB transfer.
+
+Remaining work includes bounded MongoDB upload,
+the transfer page, final log and screencast.
 Local changes must be published to GitHub before they appear in the hosted app.
 
 ## Offline loader checks

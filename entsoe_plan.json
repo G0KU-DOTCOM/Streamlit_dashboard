@@ -1,6 +1,6 @@
 {
   "plan_date": "2026-10-11",
-  "status": "one_day_probes_complete_not_bulk_downloaded",
+  "status": "hourly_data_verified_and_prepared_locally_not_uploaded",
   "period": {
     "start_inclusive": "2024-10-11T00:00:00+02:00",
     "end_exclusive": "2026-10-11T00:00:00+02:00",
@@ -21,7 +21,7 @@
       "norwegian_eic": "10YNO-1--------2",
       "foreign_eic": "10Y1001A1001A46L",
       "source": "https://www.statnett.no/for-aktorer-i-kraftbransjen/tariff/flaskehalsinntekter/",
-      "api_status": "2026-01-01_complete_both_directions"
+      "api_status": "two_year_window_complete_both_directions"
     },
     {
       "connection": "NO3-SE2",
@@ -31,7 +31,7 @@
       "norwegian_eic": "10YNO-3--------J",
       "foreign_eic": "10Y1001A1001A45N",
       "source": "https://www.statnett.no/for-aktorer-i-kraftbransjen/tariff/flaskehalsinntekter/",
-      "api_status": "2026-01-01_complete_both_directions"
+      "api_status": "two_year_window_complete_both_directions"
     },
     {
       "connection": "NO4-SE1",
@@ -41,7 +41,7 @@
       "norwegian_eic": "10YNO-4--------9",
       "foreign_eic": "10Y1001A1001A44P",
       "source": "https://www.statnett.no/for-aktorer-i-kraftbransjen/tariff/flaskehalsinntekter/",
-      "api_status": "2026-01-01_complete_both_directions"
+      "api_status": "two_year_window_complete_both_directions"
     },
     {
       "connection": "NO4-SE2",
@@ -51,7 +51,7 @@
       "norwegian_eic": "10YNO-4--------9",
       "foreign_eic": "10Y1001A1001A45N",
       "source": "https://www.statnett.no/for-aktorer-i-kraftbransjen/tariff/flaskehalsinntekter/",
-      "api_status": "2026-01-01_complete_both_directions"
+      "api_status": "two_year_window_complete_both_directions"
     },
     {
       "connection": "NO4-FI",
@@ -61,7 +61,7 @@
       "norwegian_eic": "10YNO-4--------9",
       "foreign_eic": "10YFI-1--------U",
       "source": "https://www.statnett.no/en/The-power-system/interconnectors/",
-      "api_status": "2026-01-01_complete_both_directions"
+      "api_status": "two_year_window_complete_both_directions"
     },
     {
       "connection": "NO2-DK1",
@@ -71,7 +71,7 @@
       "norwegian_eic": "10YNO-2--------T",
       "foreign_eic": "10YDK-1--------W",
       "source": "https://www.statnett.no/en/The-power-system/interconnectors/",
-      "api_status": "2025_complete_and_2026_one_day_verified"
+      "api_status": "two_year_window_complete_both_directions"
     },
     {
       "connection": "NO2-NL",
@@ -81,7 +81,7 @@
       "norwegian_eic": "10YNO-2--------T",
       "foreign_eic": "10YNL----------L",
       "source": "https://www.statnett.no/en/The-power-system/interconnectors/",
-      "api_status": "2026-01-01_complete_both_directions"
+      "api_status": "two_year_window_complete_both_directions"
     },
     {
       "connection": "NO2-DE-LU",
@@ -91,7 +91,7 @@
       "norwegian_eic": "10YNO-2--------T",
       "foreign_eic": "10Y1001A1001A82H",
       "source": "https://www.statnett.no/en/The-power-system/interconnectors/",
-      "api_status": "2026-01-01_complete_both_directions"
+      "api_status": "two_year_window_complete_both_directions"
     },
     {
       "connection": "NO2-GB",
@@ -101,7 +101,7 @@
       "norwegian_eic": "10YNO-2--------T",
       "foreign_eic": "10YGB----------A",
       "source": "https://www.statnett.no/en/The-power-system/interconnectors/",
-      "api_status": "2026-01-01_complete_both_directions"
+      "api_status": "two_year_window_complete_both_directions"
     }
   ],
   "exclusions": [
@@ -125,7 +125,7 @@
     "max_mongo_document_writes_per_second": 40,
     "max_mongo_pool_size": 2
   },
-  "guard_status": "Persistent decoded-download, cache, request-count, request-spacing, response-size and host-free-space guards are enforced by entsoe_budget.py. Raw row and database-volume guards must still be implemented in the bulk coordinator before bulk ingestion.",
+  "guard_status": "Download and Cassandra guards remain active. Spark hourly curation and BSON size validation are complete. MongoDB upload guards and fresh Atlas storage checks are still pending.",
   "curation": {
     "shape": "One document per connection and UTC hour, with both directions.",
     "fields": [
@@ -139,7 +139,9 @@
     ],
     "method": "Split interval energy at UTC-hour boundaries using overlap duration. Sum MWh and coverage minutes separately per direction. Never replace missing flow with zero. Keep incomplete hours flagged; do not present partial-year totals as full years.",
     "proposed_index": "Compound (connection, time_utc), in addition to MongoDB _id.",
-    "idempotency": "Stable connection/hour _id for curated upserts. Raw interval source revisions may change primary keys and require controlled partition replacement or versioning, not blind append."
+    "idempotency": "Stable connection/hour _id for curated upserts. Raw interval source revisions may change primary keys and require controlled partition replacement or versioning, not blind append.",
+    "measured_documents": 157680,
+    "measured_bson_bytes": 29135760
   },
   "sources": {
     "physical_connections": "https://www.statnett.no/en/The-power-system/interconnectors/",
