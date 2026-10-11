@@ -50,10 +50,54 @@ the adaptation needed for NVE's date-range limitation.
 Section 6 tests NO2–DK1 physical flows in both directions for 1 January 2026,
 using `[entsoe] token` from the same local secrets file. It limits each of two
 responses to 128 KiB and reuses XML cached in `no_sync/entsoe_cache/`. The test
-needs no running databases. It inspects raw A03 points; interval reconstruction
-and energy aggregation are the next step.
+needs no running databases. It displays raw A03 points and, in section 6.4, reconstructs the sample
+intervals, checks coverage, calculates energy totals and plots the day in
+Norwegian time. Section 7 adds a validated A01/A03 interval parser and the first annual plots.
 
-Remaining work includes two years of ENTSO-E cross-border data, Spark/Cassandra ingestion and
+Section 7 covers NO2–DK1 in 2025. Two bounded responses total 3.43 MiB locally.
+Spark writes 29,020 intervals to `ind320_energy.cross_border_intervals`, reads
+and verifies them, and supplies an annual pie with percentages inside the
+slices and a January line plot. Both directions have complete annual coverage.
+Use the Python 3.12 environment, Java 17 and running local Cassandra. The
+notebook stops Spark after extraction; Cassandra remains running. `entsoe_data.py`
+contains the bounded downloader and interval parser. Reusing this snapshot
+updates fixed keys without duplicates; source revisions with changed interval
+boundaries require a replacement strategy before refreshing the database.
+No MongoDB writes are made yet.
+
+Section 8 and `entsoe_plan.json` define a frozen rolling two-year window,
+11 October 2024–10 October 2026 inclusive, with nine international bidding-zone
+borders in both directions. Offline budget calculations estimate 157,680 paired
+hourly MongoDB documents (27.22 MiB BSON; 54.44 MiB with a 2× planning allowance).
+The planned caps are 100 MiB new XML downloads, 128 MiB cache, 1.3 million native
+intervals, 64 MiB curated data plus indexes, and 256 MiB whole-cluster MongoDB
+usage. `entsoe_budget.py` now enforces persistent download/cache/attempt limits,
+request spacing and minimum free host space. Raw-row and database-volume guards
+still need implementation before bulk ingestion.
+The planning step makes no data downloads or database writes. A separate
+read-only Atlas audit found one 86-byte test document and 36,864 index bytes.
+Fresh storage checks are required before any future upload.
+
+Section 9 verifies all nine borders in both directions for 1 January 2026.
+The eight new borders required 16 requests and 117,484 decoded bytes (114.73 KiB).
+All 18 direction samples cover 24 hours. Its executed table shows import, export,
+net import and coverage; reruns are cache-only by default. No databases were
+written in this stage. One successful day does not establish two-year coverage.
+
+`entsoe_probes.py` performs these bounded sequential checks. Run it without flags
+for cache-only verification; `--download` permits missing one-day requests.
+`entsoe_budget.py` keeps a Git-ignored ledger in `no_sync/entsoe_download_ledger.json`:
+80 attempts and 100 MiB of new decoded responses across reruns, 128 MiB total
+cache, at least one second between requests, and at least 5 GiB free host space.
+Probe responses are capped at 128 KiB; annual responses at 8 MiB. The ledger
+begins with the probes; older cache is counted in cache size but not charged as
+new traffic. Error bodies and the chunk detecting oversize count too; HTTP
+headers and transport overhead are excluded. A process lock prevents concurrent
+budget use. Interrupted requests retain reserved bytes and block new downloads
+until reviewed. Failed requests are not automatically retried. Keep the ledger
+when rerunning; deleting it would discard the cumulative accounting.
+
+Remaining work includes the full two-year collection of ENTSO-E cross-border data, Spark/Cassandra ingestion and
 extraction, curated MongoDB data, the transfer page, final log and screencast.
 Local changes must be published to GitHub before they appear in the hosted app.
 
