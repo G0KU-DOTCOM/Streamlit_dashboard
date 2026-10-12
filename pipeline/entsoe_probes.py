@@ -4,8 +4,8 @@ from pathlib import Path
 
 import pandas as pd
 
-from entsoe_budget import DownloadBudget, DownloadStopped, _save_json
-from entsoe_data import EntsoeDataError, flow_intervals, coverage_summary
+from pipeline.entsoe_budget import DownloadBudget, DownloadStopped, _save_json
+from pipeline.entsoe_data import EntsoeDataError, flow_intervals, coverage_summary
 
 PROBE_DAY = '2026-01-01'
 PROBE_RESPONSE_CAP = 128 * 1024
@@ -77,6 +77,6 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--download', action='store_true', help='Permit bounded one-day API requests for missing cache entries.')
     args = parser.parse_args()
-    result = run_probes(Path(__file__).resolve().parent, allow_download=args.download,
+    result = run_probes(Path(__file__).resolve().parents[1], allow_download=args.download,
                         progress=lambda text: print(text, flush=True))
     print(f"New requests: {result['new_requests_this_run']}; new decoded bytes: {result['new_bytes_this_run']}")

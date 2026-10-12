@@ -1,160 +1,121 @@
 # Norwegian Reservoir Dashboard
 
-IND320 project using NVE's reservoir-statistics API in a Jupyter Notebook and
-Streamlit app. The app downloads reservoir history directly from NVE; it no
-longer requires a CSV file.
+IND320 project: NVE reservoir exploration in Streamlit and an ENTSO-E
+API → Spark/Cassandra → curated MongoDB workflow developed in Jupyter.
 
-## Project contents
+## Start the app
 
-- `notebooks/prosjekt_part1.ipynb`: archived Part 1 analysis and outputs. To rerun
-  the original CSV analysis, use the [Part 1 repository snapshot](https://github.com/G0KU-DOTCOM/Streamlit_dashboard/tree/95a35b71c25d5e4c94405deea7462689a0b864c1).
-- `notebooks/prosjekt_part2.ipynb`: connection checks, NVE API inspection,
-  thirteen recreated Part 1 figures, documentation of the API app, and a small
-  ENTSO-E cross-border API test.
-- `load_data.py`: shared API downloads, validation and Streamlit caching.
-- `main.py` and `pages/`: home, table, general plots, Reservoir API and About.
-
-## Run the Streamlit app locally
-
-Use the project's Python 3.12 environment, install `requirements.txt`, then run
-from the project folder:
+From this folder, with the project's Python 3.12 environment:
 
 ```bash
+.venv/bin/python -m pip install -r requirements.txt
 .venv/bin/python -m streamlit run main.py
 ```
 
-The reservoir pages need internet access to NVE, but no Docker or database
-credentials. The Reservoir API page has a month-range slider and EL/NO/VASS
-radio buttons, with a separate filling-fraction curve for each area number.
+- **Data Table:** choose a month range and EL/NO/VASS; inspect each area's five
+  measurement trends and the original observations.
+- **Data Plot:** the same period/area selection is retained between pages.
+  Compare areas for a measurement, or view all measurements on separate axes.
+- **Reservoir API:** source, area definitions and download/caching information.
+- **About:** reserved for the project presentation.
+- **Cross Border Transfers:** MongoDB import/export data, connection/year choice,
+  an energy pie and multiple-month line plots. Missing hours are clearly flagged.
 
-NVE's history endpoint has no date-range parameters: the slider filters locally
-after downloading. History is shared across pages and users in a 24-hour memory
-cache; area metadata is cached for 7 days. App restarts clear the caches.
-Downloaded JSON is capped at 8 MiB for history and 128 KiB for area metadata.
-No reservoir data is written to MongoDB or Cassandra by the app.
+NVE history is cached for 24 hours (8 MiB maximum response); area metadata for
+7 days (128 KiB maximum). The period selection filters **after downloading**:
+NVE's documented API has no date-range parameters. The clarified assignment's
+server-side interval requirement is not implemented. The user has chosen to
+retain and document the cached local-filtering approach. These pages need internet
+access, but no Docker or database credentials, and make no database writes.
 
-## Part 2 notebook progress
+## Repository map
 
-Use the Python 3.12 `.venv` kernel. The Spark–Cassandra test additionally needs
-Java 17, PySpark 3.5.1, cassandra-driver and the running local Cassandra container.
-The MongoDB test uses pymongo and `[mongo] uri` from the Git-ignored local
-`.streamlit/secrets.toml`. Never commit credentials. Cloud credentials belong
-in Streamlit's Secrets settings.
+| Location | Purpose |
+| --- | --- |
+| `main.py`, `pages/` | Streamlit entry point and pages |
+| `dashboard/` | Shared NVE loader, selections, tables and plot helpers |
+| `pipeline/` | ENTSO-E parsing, budgets, collection, curation and guarded upload |
+| `entsoe_plan.json` | Frozen period, connections and enforced storage/download limits |
+| `notebooks/` | Part 1 archive and Part 2 analysis with saved outputs |
+| `tests/` | Offline correctness, capacity and app-navigation checks |
+| `docs/` | Requirements review, progress and cleanup decisions |
+| `requirements.txt` | Hosted Streamlit dependencies |
+| `requirements-notebook.txt` | Additional local notebook/pipeline dependencies |
+| `no_sync/` | Ignored local cache, reports, progress ledgers and curated BSON |
+| `.streamlit/secrets.toml` | Ignored local credentials; never commit this file |
 
-Section 4 runs independently of Docker and database credentials. It caps the
-API history at 8 MiB and keeps a snapshot in Git-ignored `no_sync/nve_cache/`.
-Leave `REFRESH_NVE_HISTORY = False` to reuse it. The comparison period is
-8 January 1995–6 September 2026. Section 5 documents the Streamlit changes and
-the adaptation needed for NVE's date-range limitation.
+## Local notebook and pipeline
 
-Section 6 tests NO2–DK1 physical flows in both directions for 1 January 2026,
-using `[entsoe] token` from the same local secrets file. It limits each of two
-responses to 128 KiB and reuses XML cached in `no_sync/entsoe_cache/`. The test
-needs no running databases. It displays raw A03 points and, in section 6.4, reconstructs the sample
-intervals, checks coverage, calculates energy totals and plots the day in
-Norwegian time. Section 7 adds a validated A01/A03 interval parser and the first annual plots.
+Use Python 3.12 and Java 17. Install local dependencies with
+`.venv/bin/python -m pip install -r requirements-notebook.txt`.
+Spark uses PySpark 3.5.1 and the matching Cassandra connector. Start the local
+Cassandra container for Spark/Cassandra notebook sections. Local credentials
+use `[mongo] uri` and `[entsoe] token` in `.streamlit/secrets.toml`; hosted app
+credentials belong in Streamlit Cloud Secrets.
 
-Section 7 covers NO2–DK1 in 2025. Two bounded responses total 3.43 MiB locally.
-Spark writes 29,020 intervals to `ind320_energy.cross_border_intervals`, reads
-and verifies them, and supplies an annual pie with percentages inside the
-slices and a January line plot. Both directions have complete annual coverage.
-Use the Python 3.12 environment, Java 17 and running local Cassandra. The
-notebook stops Spark after extraction; Cassandra remains running. `entsoe_data.py`
-contains the bounded downloader and interval parser. Reusing this snapshot
-updates fixed keys without duplicates; source revisions with changed interval
-boundaries require a replacement strategy before refreshing the database.
-No MongoDB writes are made yet.
+The modules now run with `-m` from the project root. This command **only reads
+saved progress**:
 
-Section 8 and `entsoe_plan.json` define a frozen rolling two-year window,
-11 October 2024–10 October 2026 inclusive, with nine international bidding-zone
-borders in both directions. Offline budget calculations estimate 157,680 paired
-hourly MongoDB documents (27.22 MiB BSON; 54.44 MiB with a 2× planning allowance).
-The planned caps are 100 MiB new XML downloads, 128 MiB cache, 1.3 million native
-intervals, 64 MiB curated data plus indexes, and 256 MiB whole-cluster MongoDB
-usage. `entsoe_budget.py` now enforces persistent download/cache/attempt limits,
-request spacing and minimum free host space. Raw-row and database-volume guards
-are now provided by `entsoe_storage.py`; the bulk coordinator must call them.
-The planning step makes no data downloads or database writes. A separate
-read-only Atlas audit found one 86-byte test document and 36,864 index bytes.
-Fresh storage checks are required before any future upload.
+```bash
+.venv/bin/python -m pipeline.entsoe_bulk
+```
 
-Section 9 verifies all nine borders in both directions for 1 January 2026.
-The eight new borders required 16 requests and 117,484 decoded bytes (114.73 KiB).
-All 18 direction samples cover 24 hours. Its executed table shows import, export,
-net import and coverage; reruns are cache-only by default. No databases were
-written in this stage. One successful day does not establish two-year coverage.
+`pipeline.entsoe_probes` defaults to cache-only checks. Its `--download` flag
+permits requests; `pipeline.entsoe_bulk --execute` permits collection and local
+writes. `pipeline.entsoe_hourly` reads Cassandra and regenerates local BSON.
+`pipeline.entsoe_mongo --mode audit` contacts Atlas for size checks; `pilot` and
+`upload` modes write guarded batches. Preserve the existing cache and progress
+ledgers when resuming. Moving modules did not move those files or reset budgets.
 
-`entsoe_probes.py` performs these bounded sequential checks. Run it without flags
-for cache-only verification; `--download` permits missing one-day requests.
-`entsoe_budget.py` keeps a Git-ignored ledger in `no_sync/entsoe_download_ledger.json`:
-80 attempts and 100 MiB of new decoded responses across reruns, 128 MiB total
-cache, at least one second between requests, and at least 5 GiB free host space.
-Probe responses are capped at 128 KiB; annual responses at 8 MiB. The ledger
-begins with the probes; older cache is counted in cache size but not charged as
-new traffic. Error bodies and the chunk detecting oversize count too; HTTP
-headers and transport overhead are excluded. A process lock prevents concurrent
-budget use. Interrupted requests retain reserved bytes and block new downloads
-until reviewed. Failed requests are not automatically retried. Keep the ledger
-when rerunning; deleting it would discard the cumulative accounting.
+## Current status and safeguards
 
-Section 10 records a live Spark storage audit: all 29,020 existing flow rows
-match the cached 2025 snapshot; zero new rows were needed. `entsoe_storage.py`
-now guards section 7 writes with actual row counts, allocated volume, host and
-Docker free space, and conservative working-space reservations. Identical rows
-are skipped; changed snapshots are blocked for review. New writes are flushed
-and reread before post-write size checks. Batches must contain complete intended
-partitions. The local lock coordinates project writers, not unrelated clients.
-The limits are admission checks, not a filesystem quota. The bulk coordinator is now implemented in `entsoe_bulk.py`;
-MongoDB upload guards remain to be implemented.
+The saved verification covers nine international borders in both directions,
+11 October 2024–10 October 2026: **479,845 native intervals** and **157,680
+curated hourly documents**. The BSON artifact is **27.79 MiB before indexes**.
+The MongoDB page is implemented and its bounded reader verified against the
+**200-document pilot**. Full upload remains pending. Until then, select
+**NO1-SE3 → 2024 → October** to view available pilot flows; incomplete periods
+do not display an annual pie. The default 2025 connection view is empty until
+its data are uploaded.
 
-Section 11 completes all 54 planned API/partition jobs using `entsoe_bulk.py`:
-479,845 native intervals in Cassandra; 17,520 hours per direction on all nine
-borders. Final Spark reads confirm exact window boundaries, no gaps/overlaps,
-and matching row counts and MWh totals. New bulk XML totalled 53.79 MiB;
-allocated Cassandra volume at final verification was 37.40 MiB. These
-are measured snapshots, not fixed future sizes. The table and comparison plot
-are executed from the saved Spark verification. No MongoDB writes were made.
+Limits remain **64 MiB project data plus indexes**, **256 MiB across MongoDB
+user databases**, **160,000 documents**, **40 document writes/second**, and two
+connections. Fresh database checks are required before and during upload.
+These are project safeguards, not a guarantee of future usage.
 
-Run `.venv/bin/python entsoe_bulk.py` to inspect saved progress. `--execute`
-permits bounded downloads and guarded local writes; verified jobs are reused,
-with cache hashes checked, and the final database is verified again. Keep the
-Git-ignored download ledger, cache and `no_sync/entsoe_bulk_report.json` when
-resuming. Missing/revised cache or failed coverage requires review, not a budget
-reset. The frozen period and Russia scope limitation remain as documented.
+MongoDB reads use the `(connection, time_utc)` index, at most 8,784 documents
+and 2 MiB of decoded BSON per connection/year. Results (including empty/error
+results) are cached for 24 hours with 27 entries; month changes reuse the cache.
+After completing the initial upload, restart the app to clear pilot-era results.
+The app uses a pool of two per MongoDB server; driver monitoring connections
+are additional. The page never creates collections/indexes or writes documents.
 
-Section 12 completes Spark hourly curation in `entsoe_hourly.py`. It splits
-native MW blocks at UTC-hour boundaries and pairs both directions, retaining
-coverage minutes and nulls for missing energy. All 157,680 documents have full
-coverage; all 18 direction totals match the raw energy within numerical tolerance.
-The local file `no_sync/entsoe_curated/hourly_flows.bson` contains 29,135,760
-measured BSON bytes (27.79 MiB), excluding indexes. A 2× planning allowance is
-55.57 MiB, below the 64 MiB project budget; this is not an Atlas usage measurement.
-The saved file was independently read back for IDs, coverage, totals and checksum.
-No database writes or new API downloads were made during curation.
+The app updates are implemented locally. The documented NVE
+interval limitation, partial-year labels, coverage scope and remaining
+submission work are documented in the review. Publishing requires a separate
+GitHub update; local changes alone do not change the hosted app.
 
-Run `.venv/bin/python entsoe_hourly.py` with Cassandra running to regenerate
-this local artifact. To run the synthetic Spark math checks in addition to the
-regular offline tests:
+## Checks
+
+```bash
+.venv/bin/python -m unittest discover -s tests -q
+```
+
+The ordinary suite uses fixtures and makes no live API/database requests.
+Optional local Spark math checks require Java 17 but no running Cassandra:
 
 ```bash
 RUN_SPARK_TESTS=1 .venv/bin/python -m unittest discover -s tests -p test_entsoe_hourly.py -v
 ```
 
-Both Spark driver and workers use the project's Python 3.12 environment. Fresh Atlas checks and an uploader
-with rate/size guards are required before any MongoDB transfer.
+## Documentation and references
 
-Remaining work includes bounded MongoDB upload,
-the transfer page, final log and screencast.
-Local changes must be published to GitHub before they appear in the hosted app.
-
-## Offline loader checks
-
-```bash
-.venv/bin/python -m unittest discover -s tests -v
-```
-
-## References and links
-
+- [Updated assignment and improvement register](docs/assignment-update-2026-10-12.md)
+- [Notebook and pipeline progress](docs/progress.md)
+- [Repository cleanup and validation](docs/repository-cleanup.md)
+- [Transfer-page implementation and read-only verification](docs/transfer-page.md)
+- [Part 2 notebook](notebooks/prosjekt_part2.ipynb)
+- [Part 1 repository snapshot for the archived CSV analysis](https://github.com/G0KU-DOTCOM/Streamlit_dashboard/tree/95a35b71c25d5e4c94405deea7462689a0b864c1)
 - [IND320 Streamlit notebook](https://github.com/khliland/IND320/blob/main/D2Dbook/1_Deployment1/1_Dashboards/4_Streamlit.ipynb)
 - [IND320 REST notebook](https://github.com/khliland/IND320/blob/main/D2Dbook/2_Data_sources/3_APIs/2_REST.ipynb)
 - [NVE API](https://biapi.nve.no/magasinstatistikk/swagger/index.html)

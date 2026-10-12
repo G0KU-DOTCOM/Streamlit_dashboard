@@ -1,6 +1,6 @@
 {
   "plan_date": "2026-10-11",
-  "status": "hourly_data_verified_and_prepared_locally_not_uploaded",
+  "status": "hourly_data_verified_mongodb_pilot_200_verified_full_upload_pending",
   "period": {
     "start_inclusive": "2024-10-11T00:00:00+02:00",
     "end_exclusive": "2026-10-11T00:00:00+02:00",
@@ -125,7 +125,7 @@
     "max_mongo_document_writes_per_second": 40,
     "max_mongo_pool_size": 2
   },
-  "guard_status": "Download and Cassandra guards remain active. Spark hourly curation and BSON size validation are complete. MongoDB upload guards and fresh Atlas storage checks are still pending.",
+  "guard_status": "Download, Cassandra and MongoDB upload guards are implemented. The saved 2026-10-11 uploader report verifies a 200-document pilot. Full upload remains pending and requires fresh Atlas checks before and during writes. Existing limits are unchanged.",
   "curation": {
     "shape": "One document per connection and UTC hour, with both directions.",
     "fields": [

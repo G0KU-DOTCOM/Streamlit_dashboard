@@ -1,102 +1,45 @@
 import streamlit as st
-from load_data import load_data_or_stop
 
+from dashboard.reservoir_views import MEASUREMENTS, area_summary, reservoir_controls, source_details
+
+st.set_page_config(page_title="Reservoir Data Table", layout="wide")
 st.title("Reservoir Data Table")
+st.write("Compare each area's weekly measurements over the selected period.")
+selection = reservoir_controls("table")
 
-# The API download is cached and shared with the other pages.
-reservoirs = load_data_or_stop()
-
-st.write(f"The dataset contains {len(reservoirs):,} rows.")
-# The dataset contains several geographical rows for each week.
-# I use the national row so the first month becomes one continuous series.
-national_data = (
-    reservoirs[reservoirs["area_type"] == "NO"]
-    .sort_values("observation_date")
-)
-
-first_date = national_data["observation_date"].min()
-first_month_label = first_date.strftime("%B %Y")
-
-first_month = national_data[
-    national_data["observation_date"].dt.to_period("M")
-    == first_date.to_period("M")
-]
-
-st.write(
-    f"The first month contains {len(first_month)} national observations."
-)
-
-# Only the actual measurements are meaningful as line charts.
-# Dates, categories and identifiers are instead shown as text.
-measurement_columns = [
-    "filling_fraction",
-    "capacity_twh",
-    "stored_energy_twh",
-    "previous_week_filling_fraction",
-    "weekly_filling_change",
-]
-
-table_rows = []
-
-for column in reservoirs.columns:
-    first_month_values = first_month[column]
-
-    # I format the two date columns separately so they are understandable
-    # instead of displaying Python's internal datetime representation.
-    if column == "observation_date":
-        displayed_values = ", ".join(
-            first_month_values.dt.strftime("%d.%m.%Y")
-        )
-    elif column == "next_publication_date":
-        displayed_values = (
-            "Not recorded"
-            if first_month_values.isna().all()
-            else ", ".join(
-                first_month_values.dropna().dt.strftime("%d.%m.%Y")
-            )
-        )
-    elif column in measurement_columns:
-        displayed_values = ", ".join(
-            f"{value:.4f}" for value in first_month_values
-        )
-    else:
-        displayed_values = ", ".join(
-            first_month_values.astype(str)
-        )
-
-    # LineChartColumn needs a list of numbers. I therefore only provide
-    # chart values for columns that contain actual measurements.
-    trend_values = (
-        first_month_values.astype(float).tolist()
-        if column in measurement_columns
-        else None
+if selection.data.empty:
+    st.info("There are no observations for this period and area type.")
+else:
+    # Each area has its own row and five independent measurement sparklines.
+    # Identifiers and dates remain ordinary columns rather than mini-plots.
+    st.dataframe(
+        area_summary(selection),
+        column_config={
+            "area": "Area", "area_number": "Area number", "observations": "Observations",
+            "first_observation": st.column_config.DateColumn("First observation"),
+            "last_observation": st.column_config.DateColumn("Last observation"),
+            **{
+                column: st.column_config.LineChartColumn(
+                    label, width="medium",
+                    help="Weekly values in chronological order. Missing weeks are not replaced with zero.",
+                )
+                for column, label in MEASUREMENTS.items()
+            },
+        },
+        hide_index=True,
     )
-
-    table_rows.append(
-        {
-            "column": column,
-            "data_type": str(reservoirs[column].dtype),
-            "first_month_values": displayed_values,
-            "first_month_trend": trend_values,
-        }
+    st.caption(
+        "Each trend uses its own vertical scale. Filling fraction 1.0 means 100%; "
+        "weekly change 0.01 means one percentage point. Open Data Plot for axes and values."
     )
-if first_month["next_publication_date"].isna().all():
-    st.info(
-        f"The next publication date was not recorded during {first_month_label}. "
-        "The API's year-1 sentinel is treated as a missing value (NaT)."
-    )
+    with st.expander("Selected observations and column types"):
+        # Preserve the Part 1 ability to inspect all eleven imported fields.
+        st.dataframe(selection.data, hide_index=True)
+        st.dataframe(
+            [{"column": column, "data_type": str(dtype)} for column, dtype in selection.history.dtypes.items()],
+            hide_index=True,
+        )
+        if selection.data["next_publication_date"].isna().any():
+            st.caption("Missing publication dates are shown as empty values; NVE's year-1 marker is treated as missing.")
 
-st.dataframe(
-    table_rows,
-    column_config={
-        "column": "Imported column",
-        "data_type": "Data type",
-        "first_month_values": f"Values from {first_month_label}",
-        "first_month_trend": st.column_config.LineChartColumn(
-            f"Trend during {first_month_label}",
-            width="medium",
-            help=f"Weekly national observations from {first_month_label}.",
-        ),
-    },
-    hide_index=True,
-)
+source_details(selection.history)

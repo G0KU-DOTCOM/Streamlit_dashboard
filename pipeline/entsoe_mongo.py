@@ -17,7 +17,7 @@ from bson.codec_options import CodecOptions
 from pymongo import MongoClient, UpdateOne
 from pymongo.server_api import ServerApi
 
-from entsoe_budget import _save_json
+from pipeline.entsoe_budget import _save_json
 
 DATABASE='ind320_energy'
 COLLECTION='hourly_flows'
@@ -271,6 +271,6 @@ if __name__=='__main__':
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--mode',choices=['audit','pilot','upload'],default='audit')
     args=parser.parse_args()
-    try:run(Path(__file__).resolve().parent,args.mode)
+    try:run(Path(__file__).resolve().parents[1],args.mode)
     except UploadStopped as exc:
         print('STOPPED:',exc,flush=True);sys.exit(1)

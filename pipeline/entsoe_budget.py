@@ -15,7 +15,7 @@ import xml.etree.ElementTree as ET
 
 import requests
 
-from entsoe_data import EntsoeDataError, flow_intervals
+from pipeline.entsoe_data import EntsoeDataError, flow_intervals
 
 CHUNK_BYTES = 8192
 ENDPOINT = 'https://web-api.tp.entsoe.eu/api'

@@ -6,7 +6,7 @@ from unittest.mock import MagicMock, patch
 import pandas as pd
 import requests
 
-import load_data as nve
+from dashboard import load_data as nve
 
 
 def observation(**changes):

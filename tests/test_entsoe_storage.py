@@ -4,7 +4,7 @@ import tempfile
 import unittest
 from unittest.mock import patch
 
-from entsoe_storage import check_capacity, measure_storage, storage_lock, StorageStopped, WORKING_RESERVE, BYTES_PER_NEW_ROW
+from pipeline.entsoe_storage import check_capacity, measure_storage, storage_lock, StorageStopped, WORKING_RESERVE, BYTES_PER_NEW_ROW
 
 
 class StorageTests(unittest.TestCase):
@@ -60,7 +60,7 @@ class StorageTests(unittest.TestCase):
                 self.check(current,new,batch)
 
     def test_stopped_container_fails_closed(self):
-        with patch('entsoe_storage._docker', return_value='[{"State":{"Running":false}}]') as docker:
+        with patch('pipeline.entsoe_storage._docker', return_value='[{"State":{"Running":false}}]') as docker:
             with self.assertRaises(StorageStopped):
                 measure_storage(Path.cwd())
             docker.assert_called_once()
@@ -68,7 +68,7 @@ class StorageTests(unittest.TestCase):
     def test_running_container_with_stopped_transport_is_rejected(self):
         details = [{'State': {'Running': True}, 'Mounts': [
             {'Destination': '/var/lib/cassandra', 'RW': True}]}]
-        with patch('entsoe_storage._docker', side_effect=[json.dumps(details), 'not running']):
+        with patch('pipeline.entsoe_storage._docker', side_effect=[json.dumps(details), 'not running']):
             with self.assertRaisesRegex(StorageStopped, 'transport'):
                 measure_storage(Path.cwd())
 

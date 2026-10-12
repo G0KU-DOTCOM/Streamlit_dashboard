@@ -179,7 +179,7 @@ def guarded_spark_write(spark, incoming, project_root, *, dry_run=True):
                     after = check_capacity(measure_storage(root), current_rows=after_count,
                                            new_rows=0, batch_rows=0, limits=limits)
                     report.update(rows_written=new_rows, after_write=after)
-                from entsoe_budget import _save_json
+                from pipeline.entsoe_budget import _save_json
                 _save_json(root / 'no_sync/entsoe_storage_audit.json', report)
                 return report
             finally:

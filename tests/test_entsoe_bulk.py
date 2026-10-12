@@ -2,7 +2,7 @@ import json
 from pathlib import Path
 import unittest
 import pandas as pd
-from entsoe_bulk import segments
+from pipeline.entsoe_bulk import segments
 
 class BulkPlanTests(unittest.TestCase):
     def setUp(self):

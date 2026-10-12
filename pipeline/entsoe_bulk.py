@@ -14,9 +14,9 @@ import sys
 
 import pandas as pd
 
-from entsoe_budget import DownloadBudget, _save_json
-from entsoe_data import flow_intervals, coverage_summary, EntsoeDataError
-from entsoe_storage import guarded_spark_write, measure_storage, check_capacity, StorageStopped, _table
+from pipeline.entsoe_budget import DownloadBudget, _save_json
+from pipeline.entsoe_data import flow_intervals, coverage_summary, EntsoeDataError
+from pipeline.entsoe_storage import guarded_spark_write, measure_storage, check_capacity, StorageStopped, _table
 
 SCHEMA = ('connection string, year int, month int, direction string, '
           'start_utc timestamp, end_utc timestamp, power_mw double, '
@@ -192,7 +192,7 @@ if __name__=='__main__':
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--execute',action='store_true')
     args=parser.parse_args()
-    root=Path(__file__).resolve().parent
+    root=Path(__file__).resolve().parents[1]
     if args.execute:
         try:run(root)
         except Exception as exc:

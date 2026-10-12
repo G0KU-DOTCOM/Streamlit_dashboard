@@ -16,7 +16,7 @@ class EntsoeDataError(Exception):
 def load_flow_xml(project_root, origin, destination, start, end, cache_name, *, max_response_bytes=None):
     """Use the persistent project budget for every cache read or GET request."""
     # Import here to avoid a cycle: the budget reuses this module's XML checks.
-    from entsoe_budget import DownloadBudget
+    from pipeline.entsoe_budget import DownloadBudget
     return DownloadBudget(project_root).load(
         origin, destination, start, end, cache_name, max_response_bytes
     )

@@ -5,8 +5,8 @@ import tempfile
 import unittest
 from unittest.mock import patch, MagicMock
 
-from entsoe_budget import DownloadBudget, DownloadStopped, CHUNK_BYTES
-from entsoe_data import EntsoeDataError
+from pipeline.entsoe_budget import DownloadBudget, DownloadStopped, CHUNK_BYTES
+from pipeline.entsoe_data import EntsoeDataError
 from test_entsoe_data import xml, START, END
 
 
@@ -21,7 +21,7 @@ class BudgetTests(unittest.TestCase):
         (self.root / '.streamlit').mkdir()
         (self.root / '.streamlit/secrets.toml').write_text('[entsoe]\ntoken = "dummy-test-secret"\n')
         self.body = xml([(1, 100)])
-        self.get = self.enterContext(patch('entsoe_budget.requests.get'))
+        self.get = self.enterContext(patch('pipeline.entsoe_budget.requests.get'))
         self.response(self.body)
 
     def save_plan(self):

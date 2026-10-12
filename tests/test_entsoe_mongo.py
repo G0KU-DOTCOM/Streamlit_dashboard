@@ -2,7 +2,7 @@ import json
 from pathlib import Path
 import unittest
 from unittest.mock import MagicMock
-from entsoe_mongo import admit,number,missing_documents,ensure_index,split_batches,UploadStopped,RESERVE_BYTES
+from pipeline.entsoe_mongo import admit,number,missing_documents,ensure_index,split_batches,UploadStopped,RESERVE_BYTES
 
 class MongoGuardTests(unittest.TestCase):
     def setUp(self):

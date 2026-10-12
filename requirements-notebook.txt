@@ -1,0 +1,6 @@
+-r requirements.txt
+ipykernel
+nbformat
+nbconvert
+pyspark==3.5.1
+cassandra-driver==3.30.1

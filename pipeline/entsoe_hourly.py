@@ -8,9 +8,9 @@ import shutil
 
 from bson import BSON
 
-from entsoe_budget import _save_json
-from entsoe_bulk import start_spark, final_verification
-from entsoe_storage import _table, StorageStopped, storage_lock
+from pipeline.entsoe_budget import _save_json
+from pipeline.entsoe_bulk import start_spark, final_verification
+from pipeline.entsoe_storage import _table, StorageStopped, storage_lock
 
 
 def hourly_flows(raw, start, end, connections):
@@ -152,7 +152,7 @@ def run(root):
 
 if __name__=='__main__':
     import sys
-    try:run(Path(__file__).resolve().parent)
+    try:run(Path(__file__).resolve().parents[1])
     except Exception as exc:
         print('STOPPED:',str(exc) if isinstance(exc,StorageStopped) else type(exc).__name__)
         sys.exit(1)

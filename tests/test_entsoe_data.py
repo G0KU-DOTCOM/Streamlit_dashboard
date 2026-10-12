@@ -2,7 +2,7 @@ import unittest
 from unittest.mock import patch,MagicMock
 from datetime import datetime,timezone
 import pandas as pd
-from entsoe_data import flow_intervals,coverage_summary,EntsoeDataError
+from pipeline.entsoe_data import flow_intervals,coverage_summary,EntsoeDataError
 
 START=datetime(2025,1,1,tzinfo=timezone.utc)
 END=datetime(2025,1,1,1,tzinfo=timezone.utc)

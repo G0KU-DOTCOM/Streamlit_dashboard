@@ -7,8 +7,8 @@ import tempfile
 import unittest
 from bson import decode_all
 
-from entsoe_hourly import hourly_flows,write_bson,document_from_row
-from entsoe_storage import StorageStopped
+from pipeline.entsoe_hourly import hourly_flows,write_bson,document_from_row
+from pipeline.entsoe_storage import StorageStopped
 
 
 def document_row(epoch=1735689600):
