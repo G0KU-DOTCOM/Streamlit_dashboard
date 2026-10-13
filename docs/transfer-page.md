@@ -81,7 +81,8 @@ cleanup; the pipeline mathematics has not changed in this step.
 
 ## Remaining work
 
-Resume the existing guarded full upload, verify the complete remote dataset,
-restart the app to clear pilot caches, and check all connections/years before
-publishing. This step implemented and read-tested the page; it did not perform
-a full upload, push changes or deploy the app.
+The full upload completed on 13 October at 16:51:32 UTC with all 157,680 remote
+documents compared against local BSON. Project data plus indexes measured
+37.09 MiB, within the 64 MiB project limit. Restart the app to clear pilot caches
+and check all connections/years before submission. The hosted-app verification
+remains outstanding. See [the completed upload record](mongodb-upload.md).

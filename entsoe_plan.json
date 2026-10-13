@@ -1,6 +1,6 @@
 {
   "plan_date": "2026-10-11",
-  "status": "hourly_data_verified_mongodb_pilot_200_verified_full_upload_pending",
+  "status": "mongodb_full_upload_complete_and_final_readback_verified",
   "period": {
     "start_inclusive": "2024-10-11T00:00:00+02:00",
     "end_exclusive": "2026-10-11T00:00:00+02:00",
@@ -125,7 +125,7 @@
     "max_mongo_document_writes_per_second": 40,
     "max_mongo_pool_size": 2
   },
-  "guard_status": "Download, Cassandra and MongoDB upload guards are implemented. The saved 2026-10-11 uploader report verifies a 200-document pilot. Full upload remains pending and requires fresh Atlas checks before and during writes. Existing limits are unchanged.",
+  "guard_status": "All existing download, Cassandra and MongoDB limits are unchanged. Full upload completed on 2026-10-13 at 16:51:32 UTC: 157,680 remote documents compared with local BSON. Project data plus indexes: 38,892,432 bytes; inspected user databases: 38,929,382 bytes. Restart Streamlit to clear pilot caches and verify hosted views before submission.",
   "curation": {
     "shape": "One document per connection and UTC hour, with both directions.",
     "fields": [

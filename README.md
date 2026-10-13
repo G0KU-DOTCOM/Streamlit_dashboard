@@ -69,14 +69,21 @@ ledgers when resuming. Moving modules did not move those files or reset budgets.
 
 ## Current status and safeguards
 
+The full MongoDB upload **completed and passed final read-back on 13 October
+at 16:51:32 UTC**. All **157,680 documents** were compared with local BSON.
+Project data plus indexes measured **37.09 MiB / 64 MiB**; inspected user
+databases combined measured **37.13 MiB / 256 MiB**. These are dated measurements.
+Use `.venv/bin/python -m pipeline.upload_status` for saved verification status.
+See [upload operations](docs/mongodb-upload.md).
+
 The saved verification covers nine international borders in both directions,
 11 October 2024–10 October 2026: **479,845 native intervals** and **157,680
 curated hourly documents**. The BSON artifact is **27.79 MiB before indexes**.
-The MongoDB page is implemented and its bounded reader verified against the
-**200-document pilot**. Full upload remains pending. Until then, select
-**NO1-SE3 → 2024 → October** to view available pilot flows; incomplete periods
-do not display an annual pie. The default 2025 connection view is empty until
-its data are uploaded.
+The MongoDB page is implemented and its bounded reader was verified against
+the initial pilot. The full dataset is now uploaded and independently read back
+by the uploader. **Restart Streamlit** to clear earlier empty/pilot caches, then
+select **NO2-DK1 → 2025** to check the full-year pie and January/monthly curves.
+The final hosted-app check remains outstanding.
 
 Limits remain **64 MiB project data plus indexes**, **256 MiB across MongoDB
 user databases**, **160,000 documents**, **40 document writes/second**, and two
