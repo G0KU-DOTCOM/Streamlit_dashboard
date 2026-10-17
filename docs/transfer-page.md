@@ -86,3 +86,19 @@ documents compared against local BSON. Project data plus indexes measured
 37.09 MiB, within the 64 MiB project limit. Restart the app to clear pilot caches
 and check all connections/years before submission. The hosted-app verification
 remains outstanding. See [the completed upload record](mongodb-upload.md).
+
+## Full-data app verification — 13 October 2026
+
+Streamlit AppTest ran the actual transfer page with live MongoDB data after
+the full upload. All nine connections rendered with complete 2025 coverage
+(8,760 hours each), with no page errors or incomplete-data warnings. The
+NO2-DK1 total matched the notebook: approximately 1,153,915 MWh imported and
+8,157,331 MWh exported. January/March selection preserved the gap for February;
+empty selection produced a helpful message. Month changes caused no new query.
+
+The NO2-DK1 partial-year checks also passed: 1,969 hours for 2024 and 6,791 for
+2026, with explicit partial-year labels. The test used 11 bounded queries and
+13,394,040 projected BSON bytes (12.77 MiB); no database writes were performed.
+The last read was at 2026-10-13 18:05:47 UTC. This is a local app integration
+check, not confirmation of the hosted Streamlit Cloud deployment. The saved
+report is in Git-ignored `no_sync/full_transfer_app_verification.json`.

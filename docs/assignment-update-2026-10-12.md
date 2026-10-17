@@ -113,11 +113,10 @@ This review performs no data downloads from NVE/ENTSO-E or database writes.
    Keep the upstream limitation explicit; instructor acceptance has not been established.
 2. Completed locally: reservoir views share period and EL/NO/VASS selection,
    with separate area plots and table trends; test results are in the cleanup log.
-3. Completed locally: MongoDB page and bounded reader tested for the pilot,
-   non-adjacent months, empty selection, DST and partial years. Complete the
-   remaining full upload before demonstrating all connections/annual pies online.
-4. Run a fresh Atlas audit, then resume the existing guarded uploader without
-   changing its limits. Verify all documents before presenting full-year totals.
+3. Completed locally: full-data MongoDB page checks passed for all nine
+   connections in 2025, multiple/empty month selection and NO2-DK1 partial years.
+4. Completed on 13 October: all 157,680 uploaded documents were compared with
+   local BSON; project storage including indexes was 37.09 MiB, below 64 MiB.
 5. Verify the app reads MongoDB directly, complete the notebook documentation,
    and prepare the executed PDF, hosted app and screencast.
 

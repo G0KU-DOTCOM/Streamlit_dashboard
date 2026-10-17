@@ -79,9 +79,10 @@ See [upload operations](docs/mongodb-upload.md).
 The saved verification covers nine international borders in both directions,
 11 October 2024–10 October 2026: **479,845 native intervals** and **157,680
 curated hourly documents**. The BSON artifact is **27.79 MiB before indexes**.
-The MongoDB page is implemented and its bounded reader was verified against
-the initial pilot. The full dataset is now uploaded and independently read back
-by the uploader. **Restart Streamlit** to clear earlier empty/pilot caches, then
+The MongoDB page is implemented. After upload, local Streamlit integration
+checks passed for all nine connections in 2025 and both partial years for
+NO2-DK1. Multiple-month selections reused cache and annual totals matched
+the notebook. The full dataset was also independently read back by the uploader. **Restart Streamlit** to clear earlier empty/pilot caches, then
 select **NO2-DK1 → 2025** to check the full-year pie and January/monthly curves.
 The final hosted-app check remains outstanding.
 
