@@ -1,6 +1,6 @@
 # Cross-border transfer page — 12 October 2026
 
-`pages/5_Cross_Border_Transfers.py` now implements the updated assignment's
+`pages/4_Cross_Border_Transfers.py` now implements the updated assignment's
 separate two-column view. The left side has connection radio buttons, a year
 selectbox and an import/export energy pie with percentages inside the slices.
 The right side uses multi-select month pills and import/export hourly-mean MW

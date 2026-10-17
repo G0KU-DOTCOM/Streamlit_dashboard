@@ -1,0 +1,200 @@
+{
+  "documents": 157680,
+  "bson_bytes": 29135760,
+  "sha256": "12633b70801730fcc22c2f0f177ee333f01d795b1f6dedfa7150f7c32f14f89c",
+  "sample_documents": [
+    {
+      "_id": "NO1-SE3|20241010T2200Z",
+      "connection": "NO1-SE3",
+      "time_utc": "2024-10-10T22:00:00+00:00",
+      "import_mwh": 1771.385,
+      "import_coverage_minutes": 60.0,
+      "export_mwh": 0.0,
+      "export_coverage_minutes": 60.0
+    },
+    {
+      "_id": "NO1-SE3|20241010T2300Z",
+      "connection": "NO1-SE3",
+      "time_utc": "2024-10-10T23:00:00+00:00",
+      "import_mwh": 1679.245,
+      "import_coverage_minutes": 60.0,
+      "export_mwh": 0.0,
+      "export_coverage_minutes": 60.0
+    },
+    {
+      "_id": "NO2-DK1|20241010T2200Z",
+      "connection": "NO2-DK1",
+      "time_utc": "2024-10-10T22:00:00+00:00",
+      "import_mwh": 341.5,
+      "import_coverage_minutes": 60.0,
+      "export_mwh": 0.0,
+      "export_coverage_minutes": 60.0
+    },
+    {
+      "_id": "NO2-DK1|20241010T2300Z",
+      "connection": "NO2-DK1",
+      "time_utc": "2024-10-10T23:00:00+00:00",
+      "import_mwh": 389.6325,
+      "import_coverage_minutes": 60.0,
+      "export_mwh": 0.0,
+      "export_coverage_minutes": 60.0
+    },
+    {
+      "_id": "NO2-GB|20241010T2200Z",
+      "connection": "NO2-GB",
+      "time_utc": "2024-10-10T22:00:00+00:00",
+      "import_mwh": 0.0,
+      "import_coverage_minutes": 60.0,
+      "export_mwh": 1449.0624999999998,
+      "export_coverage_minutes": 60.0
+    },
+    {
+      "_id": "NO2-GB|20241010T2300Z",
+      "connection": "NO2-GB",
+      "time_utc": "2024-10-10T23:00:00+00:00",
+      "import_mwh": 0.0,
+      "import_coverage_minutes": 60.0,
+      "export_mwh": 1449.2150000000001,
+      "export_coverage_minutes": 60.0
+    }
+  ],
+  "status": "prepared_locally_not_uploaded",
+  "created_at_utc": "2026-10-11T18:59:49+00:00",
+  "period": {
+    "start_inclusive": "2024-10-11T00:00:00+02:00",
+    "end_exclusive": "2026-10-11T00:00:00+02:00",
+    "timezone": "Europe/Oslo",
+    "interpretation": "Two rolling calendar years ending before today; 2024 and 2026 are partial calendar years."
+  },
+  "raw_rows": 479845,
+  "energy_checks": [
+    {
+      "connection": "NO1-SE3",
+      "direction": "export",
+      "raw_mwh": 3081547.768726249,
+      "hourly_mwh": 3081547.768726251,
+      "difference_mwh": 1.862645149230957e-09
+    },
+    {
+      "connection": "NO1-SE3",
+      "direction": "import",
+      "raw_mwh": 12068701.035957253,
+      "hourly_mwh": 12068701.035957243,
+      "difference_mwh": -9.313225746154785e-09
+    },
+    {
+      "connection": "NO2-DE-LU",
+      "direction": "export",
+      "raw_mwh": 13576996.157250011,
+      "hourly_mwh": 13576996.157249968,
+      "difference_mwh": -4.284083843231201e-08
+    },
+    {
+      "connection": "NO2-DE-LU",
+      "direction": "import",
+      "raw_mwh": 3101195.9092499968,
+      "hourly_mwh": 3101195.9092499963,
+      "difference_mwh": -4.656612873077393e-10
+    },
+    {
+      "connection": "NO2-DK1",
+      "direction": "export",
+      "raw_mwh": 13983400.227500029,
+      "hourly_mwh": 13983400.227499977,
+      "difference_mwh": -5.21540641784668e-08
+    },
+    {
+      "connection": "NO2-DK1",
+      "direction": "import",
+      "raw_mwh": 3975862.9794690013,
+      "hourly_mwh": 3975862.9794689976,
+      "difference_mwh": -3.725290298461914e-09
+    },
+    {
+      "connection": "NO2-GB",
+      "direction": "export",
+      "raw_mwh": 17481767.009242963,
+      "hourly_mwh": 17481767.00924301,
+      "difference_mwh": 4.842877388000488e-08
+    },
+    {
+      "connection": "NO2-GB",
+      "direction": "import",
+      "raw_mwh": 1823675.4835427492,
+      "hourly_mwh": 1823675.483542749,
+      "difference_mwh": -2.3283064365386963e-10
+    },
+    {
+      "connection": "NO2-NL",
+      "direction": "export",
+      "raw_mwh": 4526786.3230849905,
+      "hourly_mwh": 4526786.323084998,
+      "difference_mwh": 7.450580596923828e-09
+    },
+    {
+      "connection": "NO2-NL",
+      "direction": "import",
+      "raw_mwh": 1165537.4958777453,
+      "hourly_mwh": 1165537.4958777484,
+      "difference_mwh": 3.026798367500305e-09
+    },
+    {
+      "connection": "NO3-SE2",
+      "direction": "export",
+      "raw_mwh": 1499548.7698502492,
+      "hourly_mwh": 1499548.7698502475,
+      "difference_mwh": -1.6298145055770874e-09
+    },
+    {
+      "connection": "NO3-SE2",
+      "direction": "import",
+      "raw_mwh": 3633399.559459999,
+      "hourly_mwh": 3633399.5594599927,
+      "difference_mwh": -6.51925802230835e-09
+    },
+    {
+      "connection": "NO4-FI",
+      "direction": "export",
+      "raw_mwh": 603936.7314209999,
+      "hourly_mwh": 603936.7314209995,
+      "difference_mwh": -3.4924596548080444e-10
+    },
+    {
+      "connection": "NO4-FI",
+      "direction": "import",
+      "raw_mwh": 88036.23590150003,
+      "hourly_mwh": 88036.23590150011,
+      "difference_mwh": 8.731149137020111e-11
+    },
+    {
+      "connection": "NO4-SE1",
+      "direction": "export",
+      "raw_mwh": 2932007.8258232484,
+      "hourly_mwh": 2932007.825823246,
+      "difference_mwh": -2.3283064365386963e-09
+    },
+    {
+      "connection": "NO4-SE1",
+      "direction": "import",
+      "raw_mwh": 1371334.0258847498,
+      "hourly_mwh": 1371334.025884747,
+      "difference_mwh": -2.7939677238464355e-09
+    },
+    {
+      "connection": "NO4-SE2",
+      "direction": "export",
+      "raw_mwh": 963618.5054442518,
+      "hourly_mwh": 963618.5054442517,
+      "difference_mwh": -1.1641532182693481e-10
+    },
+    {
+      "connection": "NO4-SE2",
+      "direction": "import",
+      "raw_mwh": 431078.58300900005,
+      "hourly_mwh": 431078.5830089996,
+      "difference_mwh": -4.656612873077393e-10
+    }
+  ],
+  "index_headroom_scenario_bytes": 58271520,
+  "mongo_writes": 0
+}

@@ -75,7 +75,7 @@ class ReservoirViewsTests(unittest.TestCase):
         # Visit pages without widgets: their cleanup must not discard selection.
         app.switch_page('pages/3_Reservoir_API.py').run()
         self.assert_ok(app)
-        app.switch_page('pages/4_About.py').run()
+        app.switch_page('pages/5_About.py').run()
         self.assert_ok(app)
         app.switch_page('pages/1_Data_Table.py').run()
         self.assert_ok(app)

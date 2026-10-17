@@ -1,0 +1,311 @@
+{
+  "status": "complete",
+  "period": {
+    "start_inclusive": "2024-10-11T00:00:00+02:00",
+    "end_exclusive": "2026-10-11T00:00:00+02:00",
+    "timezone": "Europe/Oslo",
+    "interpretation": "Two rolling calendar years ending before today; 2024 and 2026 are partial calendar years."
+  },
+  "completed_at_utc": "2026-10-11T18:47:17+00:00",
+  "segments": {
+    "NO1-SE3|2024-10-11|2025-01-01|import": {
+      "downloaded_bytes": 203817
+    },
+    "NO1-SE3|2024-10-11|2025-01-01|export": {
+      "downloaded_bytes": 59206
+    },
+    "NO1-SE3|2025-01-01|2026-01-01|import": {
+      "downloaded_bytes": 1522265
+    },
+    "NO1-SE3|2025-01-01|2026-01-01|export": {
+      "downloaded_bytes": 545119
+    },
+    "NO1-SE3|2026-01-01|2026-10-11|import": {
+      "downloaded_bytes": 2598716
+    },
+    "NO1-SE3|2026-01-01|2026-10-11|export": {
+      "downloaded_bytes": 982996
+    },
+    "NO3-SE2|2024-10-11|2025-01-01|import": {
+      "downloaded_bytes": 178364
+    },
+    "NO3-SE2|2024-10-11|2025-01-01|export": {
+      "downloaded_bytes": 86749
+    },
+    "NO3-SE2|2025-01-01|2026-01-01|import": {
+      "downloaded_bytes": 1119276
+    },
+    "NO3-SE2|2025-01-01|2026-01-01|export": {
+      "downloaded_bytes": 955392
+    },
+    "NO3-SE2|2026-01-01|2026-10-11|import": {
+      "downloaded_bytes": 2731317
+    },
+    "NO3-SE2|2026-01-01|2026-10-11|export": {
+      "downloaded_bytes": 775517
+    },
+    "NO4-SE1|2024-10-11|2025-01-01|import": {
+      "downloaded_bytes": 151334
+    },
+    "NO4-SE1|2024-10-11|2025-01-01|export": {
+      "downloaded_bytes": 130148
+    },
+    "NO4-SE1|2025-01-01|2026-01-01|import": {
+      "downloaded_bytes": 817210
+    },
+    "NO4-SE1|2025-01-01|2026-01-01|export": {
+      "downloaded_bytes": 1280643
+    },
+    "NO4-SE1|2026-01-01|2026-10-11|import": {
+      "downloaded_bytes": 1053371
+    },
+    "NO4-SE1|2026-01-01|2026-10-11|export": {
+      "downloaded_bytes": 2485163
+    },
+    "NO4-SE2|2024-10-11|2025-01-01|import": {
+      "downloaded_bytes": 144439
+    },
+    "NO4-SE2|2024-10-11|2025-01-01|export": {
+      "downloaded_bytes": 121321
+    },
+    "NO4-SE2|2025-01-01|2026-01-01|import": {
+      "downloaded_bytes": 587304
+    },
+    "NO4-SE2|2025-01-01|2026-01-01|export": {
+      "downloaded_bytes": 1417067
+    },
+    "NO4-SE2|2026-01-01|2026-10-11|import": {
+      "downloaded_bytes": 1306107
+    },
+    "NO4-SE2|2026-01-01|2026-10-11|export": {
+      "downloaded_bytes": 2183877
+    },
+    "NO4-FI|2024-10-11|2025-01-01|import": {
+      "downloaded_bytes": 257788
+    },
+    "NO4-FI|2024-10-11|2025-01-01|export": {
+      "downloaded_bytes": 681792
+    },
+    "NO4-FI|2025-01-01|2026-01-01|import": {
+      "downloaded_bytes": 1177790
+    },
+    "NO4-FI|2025-01-01|2026-01-01|export": {
+      "downloaded_bytes": 2721543
+    },
+    "NO4-FI|2026-01-01|2026-10-11|import": {
+      "downloaded_bytes": 688698
+    },
+    "NO4-FI|2026-01-01|2026-10-11|export": {
+      "downloaded_bytes": 2544059
+    },
+    "NO2-DK1|2024-10-11|2025-01-01|import": {
+      "downloaded_bytes": 41033
+    },
+    "NO2-DK1|2024-10-11|2025-01-01|export": {
+      "downloaded_bytes": 215582
+    },
+    "NO2-DK1|2025-01-01|2026-01-01|import": {
+      "downloaded_bytes": 0
+    },
+    "NO2-DK1|2025-01-01|2026-01-01|export": {
+      "downloaded_bytes": 0
+    },
+    "NO2-DK1|2026-01-01|2026-10-11|import": {
+      "downloaded_bytes": 1511077
+    },
+    "NO2-DK1|2026-01-01|2026-10-11|export": {
+      "downloaded_bytes": 2043976
+    },
+    "NO2-NL|2024-10-11|2025-01-01|import": {
+      "downloaded_bytes": 37307
+    },
+    "NO2-NL|2024-10-11|2025-01-01|export": {
+      "downloaded_bytes": 682258
+    },
+    "NO2-NL|2025-01-01|2026-01-01|import": {
+      "downloaded_bytes": 455636
+    },
+    "NO2-NL|2025-01-01|2026-01-01|export": {
+      "downloaded_bytes": 2059458
+    },
+    "NO2-NL|2026-01-01|2026-10-11|import": {
+      "downloaded_bytes": 675760
+    },
+    "NO2-NL|2026-01-01|2026-10-11|export": {
+      "downloaded_bytes": 798039
+    },
+    "NO2-DE-LU|2024-10-11|2025-01-01|import": {
+      "downloaded_bytes": 68428
+    },
+    "NO2-DE-LU|2024-10-11|2025-01-01|export": {
+      "downloaded_bytes": 700496
+    },
+    "NO2-DE-LU|2025-01-01|2026-01-01|import": {
+      "downloaded_bytes": 658907
+    },
+    "NO2-DE-LU|2025-01-01|2026-01-01|export": {
+      "downloaded_bytes": 3159989
+    },
+    "NO2-DE-LU|2026-01-01|2026-10-11|import": {
+      "downloaded_bytes": 1347117
+    },
+    "NO2-DE-LU|2026-01-01|2026-10-11|export": {
+      "downloaded_bytes": 1989931
+    },
+    "NO2-GB|2024-10-11|2025-01-01|import": {
+      "downloaded_bytes": 21303
+    },
+    "NO2-GB|2024-10-11|2025-01-01|export": {
+      "downloaded_bytes": 808666
+    },
+    "NO2-GB|2025-01-01|2026-01-01|import": {
+      "downloaded_bytes": 338942
+    },
+    "NO2-GB|2025-01-01|2026-01-01|export": {
+      "downloaded_bytes": 3893915
+    },
+    "NO2-GB|2026-01-01|2026-10-11|import": {
+      "downloaded_bytes": 821121
+    },
+    "NO2-GB|2026-01-01|2026-10-11|export": {
+      "downloaded_bytes": 2564975
+    }
+  },
+  "verification": {
+    "rows": 479845,
+    "directions": [
+      {
+        "connection": "NO1-SE3",
+        "direction": "export",
+        "rows": 12593,
+        "covered_hours": 17520.0,
+        "energy_mwh": 3081547.7687262483
+      },
+      {
+        "connection": "NO1-SE3",
+        "direction": "import",
+        "rows": 34071,
+        "covered_hours": 17520.0,
+        "energy_mwh": 12068701.035957247
+      },
+      {
+        "connection": "NO2-DE-LU",
+        "direction": "export",
+        "rows": 47268,
+        "covered_hours": 17520.0,
+        "energy_mwh": 13576996.157249985
+      },
+      {
+        "connection": "NO2-DE-LU",
+        "direction": "import",
+        "rows": 16675,
+        "covered_hours": 17520.0,
+        "energy_mwh": 3101195.90925
+      },
+      {
+        "connection": "NO2-DK1",
+        "direction": "export",
+        "rows": 40816,
+        "covered_hours": 17520.0,
+        "energy_mwh": 13983400.22749998
+      },
+      {
+        "connection": "NO2-DK1",
+        "direction": "import",
+        "rows": 18619,
+        "covered_hours": 17520.0,
+        "energy_mwh": 3975862.979469001
+      },
+      {
+        "connection": "NO2-GB",
+        "direction": "export",
+        "rows": 57627,
+        "covered_hours": 17520.0,
+        "energy_mwh": 17481767.00924298
+      },
+      {
+        "connection": "NO2-GB",
+        "direction": "import",
+        "rows": 9300,
+        "covered_hours": 17520.0,
+        "energy_mwh": 1823675.483542748
+      },
+      {
+        "connection": "NO2-NL",
+        "direction": "export",
+        "rows": 28702,
+        "covered_hours": 17520.0,
+        "energy_mwh": 4526786.323085008
+      },
+      {
+        "connection": "NO2-NL",
+        "direction": "import",
+        "rows": 9469,
+        "covered_hours": 17520.0,
+        "energy_mwh": 1165537.4958777437
+      },
+      {
+        "connection": "NO3-SE2",
+        "direction": "export",
+        "rows": 14497,
+        "covered_hours": 17520.0,
+        "energy_mwh": 1499548.7698502496
+      },
+      {
+        "connection": "NO3-SE2",
+        "direction": "import",
+        "rows": 31865,
+        "covered_hours": 17520.0,
+        "energy_mwh": 3633399.5594599945
+      },
+      {
+        "connection": "NO4-FI",
+        "direction": "export",
+        "rows": 48354,
+        "covered_hours": 17520.0,
+        "energy_mwh": 603936.7314210006
+      },
+      {
+        "connection": "NO4-FI",
+        "direction": "import",
+        "rows": 17203,
+        "covered_hours": 17520.0,
+        "energy_mwh": 88036.23590150013
+      },
+      {
+        "connection": "NO4-SE1",
+        "direction": "export",
+        "rows": 30837,
+        "covered_hours": 17520.0,
+        "energy_mwh": 2932007.8258232498
+      },
+      {
+        "connection": "NO4-SE1",
+        "direction": "import",
+        "rows": 16067,
+        "covered_hours": 17520.0,
+        "energy_mwh": 1371334.0258847498
+      },
+      {
+        "connection": "NO4-SE2",
+        "direction": "export",
+        "rows": 29657,
+        "covered_hours": 17520.0,
+        "energy_mwh": 963618.5054442514
+      },
+      {
+        "connection": "NO4-SE2",
+        "direction": "import",
+        "rows": 16225,
+        "covered_hours": 17520.0,
+        "energy_mwh": 431078.5830090003
+      }
+    ],
+    "storage": {
+      "volume_allocated_bytes": 39219200
+    }
+  },
+  "download_ledger": {
+    "charged_bytes": 56519788
+  }
+}

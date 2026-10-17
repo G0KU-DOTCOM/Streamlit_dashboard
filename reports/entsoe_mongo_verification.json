@@ -1,0 +1,15 @@
+{
+  "status": "complete",
+  "final_verified_documents": 157680,
+  "completed_at_utc": "2026-10-13T16:51:32+00:00",
+  "latest_storage": {
+    "checked_at_utc": "2026-10-13T16:51:32+00:00",
+    "cluster_bytes": 38929382,
+    "project_bytes": 38892432,
+    "collection": {
+      "documents": 157680,
+      "data_bytes": 29135760,
+      "index_bytes": 9756672
+    }
+  }
+}

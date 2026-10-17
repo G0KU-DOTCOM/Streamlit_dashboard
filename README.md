@@ -17,7 +17,7 @@ From this folder, with the project's Python 3.12 environment:
 - **Data Plot:** the same period/area selection is retained between pages.
   Compare areas for a measurement, or view all measurements on separate axes.
 - **Reservoir API:** source, area definitions and download/caching information.
-- **About:** reserved for the project presentation.
+- **About:** project purpose, data workflow, sources and limitations.
 - **Cross Border Transfers:** MongoDB import/export data, connection/year choice,
   an energy pie and multiple-month line plots. Missing hours are clearly flagged.
 
@@ -129,3 +129,9 @@ RUN_SPARK_TESTS=1 .venv/bin/python -m unittest discover -s tests -p test_entsoe_
 - [NVE API](https://biapi.nve.no/magasinstatistikk/swagger/index.html)
 - [GitHub repository](https://github.com/G0KU-DOTCOM/Streamlit_dashboard)
 - [Streamlit application](https://ind320dashboard.streamlit.app)
+
+## Reproducing the submission
+
+Selected, credential-free historical verification reports are included in `reports/`. The notebook report-display cells use them without requiring private local files. They do not replace live API/database execution. See [report provenance](reports/README.md). For a full run, use Python 3.12, Java 17, Cassandra and your own API/database credentials, then follow the notebook and pipeline commands above. Runtime caches, upload progress and raw data remain under ignored `no_sync/`; do not delete their ledgers to reset limits.
+
+The work log requires personal review. Before submission, execute all notebook code, export a PDF with outputs and verify the hosted app. The documented NVE interval-filtering deviation remains unresolved. The supplied assignment text does not specify a screencast.

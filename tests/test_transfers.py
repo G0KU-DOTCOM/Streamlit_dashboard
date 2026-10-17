@@ -142,7 +142,7 @@ class TransferPageTests(unittest.TestCase):
             'frame': full_frame(connection, year), 'error': None}))
 
     def app(self):
-        return AppTest.from_file(str(ROOT/'main.py')).run().switch_page('pages/5_Cross_Border_Transfers.py').run()
+        return AppTest.from_file(str(ROOT/'main.py')).run().switch_page('pages/4_Cross_Border_Transfers.py').run()
 
     def test_complete_year_and_multiple_months(self):
         app = self.app()

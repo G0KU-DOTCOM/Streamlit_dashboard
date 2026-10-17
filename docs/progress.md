@@ -1,6 +1,6 @@
 # Notebook and pipeline progress
 
-Historical stages are retained below. For the current layout and commands, see
+Historical stages and old section numbers are retained below as development history, not current status. Full upload and local app verification completed on 13 October: 157,680 documents; 37.09 MiB including indexes. Current submission checks are notebook execution/PDF, personal log review and hosted-app verification. Archived section numbers refer to the original notebook layout. For the current layout and commands, see
 [the project README](../README.md). The latest requirement review is
 [documented separately](assignment-update-2026-10-12.md).
 
@@ -113,11 +113,10 @@ Both Spark driver and workers use the project's Python 3.12 environment.
 `pipeline/entsoe_mongo.py` now provides fresh storage checks, batches of 40, a ceiling of
 40 document writes/second, stable-ID inserts, conflict rejection and read-back
 verification. The saved 11 October report confirms a 200-document pilot in
-`ind320_energy.hourly_flows`; full transfer is pending. Fresh Atlas checks must
+`ind320_energy.hourly_flows`; full transfer was subsequently completed on 13 October (see the README). Fresh Atlas checks must
 still pass before resuming and around each batch. Keep the existing progress
 file so the uploader can resume without duplicating documents.
 
-Remaining work includes bounded MongoDB upload,
-the transfer page, final log and screencast.
+The upload and transfer page are now completed locally. The log is drafted; personal review, notebook execution/PDF and hosted-app verification remain. No screencast requirement appears in the supplied assignment text.
 Local changes must be published to GitHub before they appear in the hosted app.
 

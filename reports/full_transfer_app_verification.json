@@ -1,0 +1,165 @@
+{
+  "mode": "read_only_Streamlit_AppTest_with_live_MongoDB",
+  "status": "passed",
+  "full_year_connections": [
+    {
+      "connection": "NO1-SE3",
+      "year": 2025,
+      "complete_hours": 8760,
+      "import_mwh": 6140554.0472507505,
+      "export_mwh": 1623832.8332265
+    },
+    {
+      "connection": "NO3-SE2",
+      "year": 2025,
+      "complete_hours": 8760,
+      "import_mwh": 1290701.1776727503,
+      "export_mwh": 1090739.8120915
+    },
+    {
+      "connection": "NO4-SE1",
+      "year": 2025,
+      "complete_hours": 8760,
+      "import_mwh": 522540.57973125,
+      "export_mwh": 1294925.698919
+    },
+    {
+      "connection": "NO4-SE2",
+      "year": 2025,
+      "complete_hours": 8760,
+      "import_mwh": 136012.23963800003,
+      "export_mwh": 588632.729825
+    },
+    {
+      "connection": "NO4-FI",
+      "year": 2025,
+      "complete_hours": 8760,
+      "import_mwh": 47294.69293999999,
+      "export_mwh": 277230.7408965
+    },
+    {
+      "connection": "NO2-DK1",
+      "year": 2025,
+      "complete_hours": 8760,
+      "import_mwh": 1153915.0300735,
+      "export_mwh": 8157330.695
+    },
+    {
+      "connection": "NO2-NL",
+      "year": 2025,
+      "complete_hours": 8760,
+      "import_mwh": 415764.75749999995,
+      "export_mwh": 2791009.1550000003
+    },
+    {
+      "connection": "NO2-DE-LU",
+      "year": 2025,
+      "complete_hours": 8760,
+      "import_mwh": 767419.9,
+      "export_mwh": 7787681.850000001
+    },
+    {
+      "connection": "NO2-GB",
+      "year": 2025,
+      "complete_hours": 8760,
+      "import_mwh": 450217.293775,
+      "export_mwh": 9763524.41307925
+    }
+  ],
+  "partial_year_checks": [
+    {
+      "year": 2024,
+      "complete_hours": 1969
+    },
+    {
+      "year": 2026,
+      "complete_hours": 6791
+    }
+  ],
+  "database_query_count": 11,
+  "decoded_projected_bson_bytes": 13394040,
+  "reads": [
+    {
+      "connection": "NO2-DK1",
+      "year": 2025,
+      "documents": 8760,
+      "bson_bytes": 1340280,
+      "fetched_at_utc": "2026-10-13T18:05:37+00:00"
+    },
+    {
+      "connection": "NO1-SE3",
+      "year": 2025,
+      "documents": 8760,
+      "bson_bytes": 1340280,
+      "fetched_at_utc": "2026-10-13T18:05:39+00:00"
+    },
+    {
+      "connection": "NO3-SE2",
+      "year": 2025,
+      "documents": 8760,
+      "bson_bytes": 1340280,
+      "fetched_at_utc": "2026-10-13T18:05:40+00:00"
+    },
+    {
+      "connection": "NO4-SE1",
+      "year": 2025,
+      "documents": 8760,
+      "bson_bytes": 1340280,
+      "fetched_at_utc": "2026-10-13T18:05:41+00:00"
+    },
+    {
+      "connection": "NO4-SE2",
+      "year": 2025,
+      "documents": 8760,
+      "bson_bytes": 1340280,
+      "fetched_at_utc": "2026-10-13T18:05:42+00:00"
+    },
+    {
+      "connection": "NO4-FI",
+      "year": 2025,
+      "documents": 8760,
+      "bson_bytes": 1331520,
+      "fetched_at_utc": "2026-10-13T18:05:43+00:00"
+    },
+    {
+      "connection": "NO2-NL",
+      "year": 2025,
+      "documents": 8760,
+      "bson_bytes": 1331520,
+      "fetched_at_utc": "2026-10-13T18:05:44+00:00"
+    },
+    {
+      "connection": "NO2-DE-LU",
+      "year": 2025,
+      "documents": 8760,
+      "bson_bytes": 1357800,
+      "fetched_at_utc": "2026-10-13T18:05:45+00:00"
+    },
+    {
+      "connection": "NO2-GB",
+      "year": 2025,
+      "documents": 8760,
+      "bson_bytes": 1331520,
+      "fetched_at_utc": "2026-10-13T18:05:46+00:00"
+    },
+    {
+      "connection": "NO2-DK1",
+      "year": 2024,
+      "documents": 1969,
+      "bson_bytes": 301257,
+      "fetched_at_utc": "2026-10-13T18:05:46+00:00"
+    },
+    {
+      "connection": "NO2-DK1",
+      "year": 2026,
+      "documents": 6791,
+      "bson_bytes": 1039023,
+      "fetched_at_utc": "2026-10-13T18:05:47+00:00"
+    }
+  ],
+  "month_changes_used_cache": true,
+  "non_adjacent_month_gap_verified": true,
+  "default_year_matches_notebook": true,
+  "database_writes": 0,
+  "last_read_at_utc": "2026-10-13T18:05:47+00:00"
+}
