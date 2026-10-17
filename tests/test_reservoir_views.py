@@ -53,7 +53,14 @@ class ReservoirViewsTests(unittest.TestCase):
         self.assertTrue(lines['EL3'].isna().all())
         summary = area_summary(selection).set_index('area_number')
         self.assertEqual(summary.loc[3, 'observations'], 0)
-        self.assertEqual(summary.loc[1, 'filling_fraction'], [.2, None, None, None])
+        self.assertEqual(summary.loc[1, 'filling_fraction'], [.2])
+        self.assertIsNone(summary.loc[3, 'filling_fraction'])
+        # The two real observations have missing weeks between them: keep the
+        # dated plot's gaps and suppress its sparkline instead of joining them.
+        selection.data = history.loc[history.area_type.eq('EL')]
+        selection.end = '2026-03'
+        gapped = area_summary(selection).set_index('area_number')
+        self.assertIsNone(gapped.loc[1, 'filling_fraction'])
 
     def test_navigation_preserves_selection_and_reuses_downloads(self):
         app = AppTest.from_file(str(ROOT/'main.py')).run()

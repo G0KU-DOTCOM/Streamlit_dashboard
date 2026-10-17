@@ -110,7 +110,16 @@ def area_summary(selection):
             "last_observation": area["observation_date"].max(),
         }
         for column, lines in series.items():
-            row[column] = [None if pd.isna(value) else float(value) for value in lines[name]]
+            values = lines[name]
+            first, last = values.first_valid_index(), values.last_valid_index()
+            # LineChartColumn rejects nulls inside an array. Trim only empty
+            # edges; an interior gap leaves the whole cell empty rather than
+            # replacing missing values or connecting across an unknown week.
+            observed = values.loc[first:last] if first is not None else values.iloc[:0]
+            row[column] = (
+                observed.astype(float).tolist()
+                if len(observed) and observed.notna().all() else None
+            )
         rows.append(row)
     return pd.DataFrame(rows)
 

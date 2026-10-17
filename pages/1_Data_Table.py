@@ -21,7 +21,7 @@ else:
             **{
                 column: st.column_config.LineChartColumn(
                     label, width="medium",
-                    help="Weekly values in chronological order. Missing weeks are not replaced with zero.",
+                    help="Weekly values from the area's first to last available observation. An internal missing week leaves the chart empty; missing values are never replaced with zero.",
                 )
                 for column, label in MEASUREMENTS.items()
             },
@@ -30,7 +30,9 @@ else:
     )
     st.caption(
         "Each trend uses its own vertical scale. Filling fraction 1.0 means 100%; "
-        "weekly change 0.01 means one percentage point. Open Data Plot for axes and values."
+        "weekly change 0.01 means one percentage point. Trends omit empty weeks before "
+        "and after available values; an internal missing week leaves the trend empty. "
+        "Open Data Plot for dated axes and gaps."
     )
     with st.expander("Selected observations and column types"):
         # Preserve the Part 1 ability to inspect all eleven imported fields.
