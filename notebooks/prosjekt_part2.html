@@ -3,7 +3,7 @@
 <html lang="en">
 <head><meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>prosjekt_part2</title><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
+<title>Notebook</title><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
 <style type="text/css">
     pre { line-height: 125%; }
 td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
@@ -8452,7 +8452,7 @@ PASS: MongoDB stored and returned the test document correctly.
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
 <h3 id="2.3-What-this-check-demonstrates">2.3 What this check demonstrates<a class="anchor-link" href="#2.3-What-this-check-demonstrates">¶</a></h3><p>A successful result verifies that Python can authenticate to Atlas and insert and retrieve a document. The test document remains in <code>ind320_setup.connection_test</code> and can be viewed in Atlas Data Explorer. Repeating the test reuses it.</p>
-<p>This is a setup check only. Sections 12–15 describe the Spark-curated API data and completed MongoDB upload; section 16 documents direct reads from Streamlit.</p>
+<p>This is a setup check only. Section 12 describe the Spark-curated API data and completed MongoDB upload; section 5 documents direct reads from Streamlit.</p>
 </div>
 </div>
 </div>
@@ -9915,6 +9915,8 @@ plot selections, three geographical groups, short and full date ranges, and
 friendly error messages. Across successful page changes and widget reruns,
 only one history fetch and one metadata fetch were needed.</p>
 <p>The following sections document the ENTSO-E workflow and completed MongoDB integration. The personal work log appears at the end of the notebook.</p>
+<h3 id="Streamlit-cross-border-transfers">Streamlit cross-border transfers<a class="anchor-link" href="#Streamlit-cross-border-transfers">¶</a></h3><p><code>pages/4_Cross_Border_Transfers.py</code> reads the curated hourly data directly from MongoDB through <code>dashboard/transfers.py</code>. Two <code>st.columns</code> show connection radio buttons, year selection and an annual import/export pie on the left; multi-select month pills and a directional line plot on the right. A source expander is below. Month choices affect only the line plot, with gaps between non-adjacent months; partial years are labelled and incomplete data cannot produce an annual pie.</p>
+<p>Credentials are stored in Streamlit Secrets. Indexed connection/year reads are bounded and cached; the app makes no database writes and needs neither Spark nor Cassandra at runtime. The saved local check on 13 October verified all nine 2025 connections at 8,760 complete hours each, both NO2–DK1 partial years, annual totals and month selection. This is a local integration check, not a new check of the hosted app. See <a href="../docs/transfer-page.md">implementation and validation</a>.</p>
 </div>
 </div>
 </div>
@@ -12630,7 +12632,7 @@ This is a check of current usage, <strong>not approval that any future dataset w
 fit</strong>. New batches must pass fresh checks. Memtables and compaction can change
 disk usage; the guard reserves headroom and flushes after writes but is not a
 hard storage quota. Stop and inspect failures instead of increasing limits.</p>
-<p>Section 11 documents the completed two-year collection through this guarded writer. The subsequent hourly curation and verified MongoDB upload are documented in sections 12 and 15.</p>
+<p>Section 11 documents the completed two-year collection through this guarded writer. The subsequent hourly curation and verified MongoDB upload are documented in section 12.</p>
 </div>
 </div>
 </div>
@@ -12891,7 +12893,7 @@ The period contains all of 2025 but only parts of 2024 and 2026, so its totals
 must not be labelled as a single calendar year. Section 7 retains the required
 2025 pie and January plot for NO2–DK1.</p>
 <p>Section 12 now calculates hourly energy and coverage with Spark and verifies
-that aggregation preserves MWh. The uploader applies the storage, batch and rate limits described in section 15. No MongoDB upload occurs in this section.</p>
+that aggregation preserves MWh. The uploader applies the storage, batch and rate limits described in section 12.4. No MongoDB upload occurs in this section.</p>
 <p>Across the nine listed borders, the period contains <strong>27.66 TWh imported</strong>
 and <strong>58.65 TWh exported</strong>. The largest import total
 is <strong>NO1-SE3</strong> (12.07 TWh); the largest export total is
@@ -13063,7 +13065,7 @@ The saved BSON file has also been independently read back to verify document
 count, unique IDs, coverage, energy totals and its SHA-256 checksum.</p>
 <p>The measured BSON size includes all document fields and <code>_id</code> values. It does
 <strong>not</strong> include MongoDB indexes. The 2× BSON scenario is a planning allowance
-for indexes and uncertainty, not a measurement of future Atlas usage. The completed upload used fresh cluster checks and measured actual index sizes; section 15 reports the results.</p>
+for indexes and uncertainty, not a measurement of future Atlas usage. The completed upload used fresh cluster checks and measured actual index sizes; section 12.4 reports the results.</p>
 </div>
 </div>
 </div>
@@ -13325,273 +13327,9 @@ the project's 64 MiB allowance. This supports proceeding to upload preparation,
 but does not replace fresh Atlas checks: indexes and other databases also use
 space. The whole-cluster project stop remains 256 MiB, well before the free-tier
 limit documented in section 8.</p>
-<p>The MongoDB uploader applies fresh storage checks, bounded batches, stable document IDs, rate limits and read-back verification. Section 15 records the completed upload. The raw intervals remain in Cassandra.</p>
-</div>
-</div>
-</div>
-</div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=assignment-review-20261012">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="13.-Assignment-update-and-implementation-review-%E2%80%94-12-October-2026">13. Assignment update and implementation review — 12 October 2026<a class="anchor-link" href="#13.-Assignment-update-and-implementation-review-%E2%80%94-12-October-2026">¶</a></h2><p>The updated assignment clarifies three Streamlit requirements: the NVE slider
-must control the downloaded interval, EL/NO/VASS must control both plots and
-<code>LineChartColumn</code> for each area number, and the transfer page must use month
-pills that allow multiple selections. The earlier production-group selector
-is no longer required. The existing curated hourly schema supports this change
-without collecting additional ENTSO-E data.</p>
-<p><strong>Implemented locally:</strong> table and plot views now share period/area controls,
-with per-area measurement sparklines and curves. The API page explains sources
-and areas. The MongoDB transfer page is now implemented and read-tested; see section 14.
-NVE's <a href="https://biapi.nve.no/magasinstatistikk/swagger/v1/swagger.json">OpenAPI schema</a>,
-checked on 12 October, still declares no date-range request parameters.
-Our cached full-history download with local filtering does <strong>not</strong> literally
-fulfil the clarified download-interval requirement. Section 5 describes the
-current fallback, not an approved exception. The user has explicitly chosen to retain and document this cached fallback.
-It still does not implement upstream range filtering; instructor acceptance
-has not been established.</p>
-<p>The initial 200-document pilot was followed by the full upload, verified on <strong>13 October 2026</strong>: <strong>157,680 documents</strong>, using <strong>37.09 MiB including indexes</strong>. Section 15 gives the final measurements. Statements about no MongoDB writes in earlier sections refer to those individual stages.</p>
-<p>The <a href="../docs/assignment-update-2026-10-12.md">requirements review and improvement register</a>
-records implemented versus proposed choices, their reasons and limitations.
-These include duration-weighted energy, UTC hour keys, paired directions,
-explicit coverage, cached bounded reads, and duplicate/size/rate guards.
-Hourly aggregation preserves energy but smooths short peaks; original intervals
-remain in Cassandra. The 64 MiB project and 256 MiB cluster stop limits remain
-unchanged, with fresh checks required before resuming any upload.</p>
-<p>For the transfer page, keep the annual import/export pie independent of the
-selected months. Use 2025 for a complete-year example; 2024 and 2026 are partial
-in the frozen dataset. Multiple non-adjacent months must not be joined across
-excluded periods. Full-data local app checks are documented in section 16. The personal work log is at the end, and the AI-use statement and project/video links are at the beginning.</p>
-<h3 id="Repository-cleanup-and-verification">Repository cleanup and verification<a class="anchor-link" href="#Repository-cleanup-and-verification">¶</a></h3><p>App helpers now live in <code>dashboard/</code>; the ENTSO-E modules live in <code>pipeline/</code>.
-Imports in this notebook and the tests were updated. The original computation
-and saved code outputs are preserved; these import edits do not represent a
-new execution of the database cells. Local <code>no_sync/</code> data, secrets, period and
-limits remain in their existing locations. Pipeline commands now use
-<code>python -m pipeline.&lt;module&gt;</code>. See the README and
-<a href="../docs/repository-cleanup.md">cleanup log</a> for the layout and checks.</p>
-</div>
-</div>
-</div>
-</div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=mongo-page-20261012">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="14.-Streamlit-MongoDB-transfer-page">14. Streamlit MongoDB transfer page<a class="anchor-link" href="#14.-Streamlit-MongoDB-transfer-page">¶</a></h2><p><code>pages/5_Cross_Border_Transfers.py</code> now follows the updated two-column layout:
-connection radio buttons, year selector and energy pie on the left; multiple
-month pills and import/export lines on the right; source documentation below.
-<code>dashboard/transfers.py</code> reads the curated collection directly with PyMongo and
-Streamlit Secrets. The app needs neither local Spark nor Cassandra for this page.</p>
-<p>One indexed connection/year query returns only the needed fields, bounded to
-8,784 documents and 2 MiB decoded BSON. The year result is cached for 24 hours
-(maximum 27 entries), so selecting different months needs no additional query.
-The page is read-only. Credentials and raw server errors are not displayed.
-Missing coverage is never zero-filled; incomplete periods cannot produce an
-annual pie. 2024 and 2026 are explicitly partial years in the frozen snapshot.</p>
-<p><strong>Live read-only check: 2026-10-12T14:25:40+00:00.</strong></p>
-<table>
-<thead>
-<tr>
-<th>Check</th>
-<th>Result</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>MongoDB selection</td>
-<td>NO1-SE3, 2024</td>
-</tr>
-<tr>
-<td>Documents read</td>
-<td>200</td>
-</tr>
-<tr>
-<td>Projected BSON payload</td>
-<td>30,600 bytes</td>
-</tr>
-<tr>
-<td>Complete/expected snapshot hours</td>
-<td>200/1,969</td>
-</tr>
-<tr>
-<td>Comparison with local pilot</td>
-<td>Exact match</td>
-</tr>
-<tr>
-<td>Annual pie for incomplete data</td>
-<td>Withheld</td>
-</tr>
-<tr>
-<td>Collection count before/after</td>
-<td>200/200</td>
-</tr>
-<tr>
-<td>Project data plus indexes</td>
-<td>123,016 bytes</td>
-</tr>
-<tr>
-<td>Inspected user databases, data plus indexes</td>
-<td>159,966 bytes</td>
-</tr>
-</tbody>
-</table>
-<p>These are dated pilot measurements, not full-upload estimates. No new documents
-or indexes were written. The local full-year artifact separately verifies the
-page's annual energy calculation against section 7; it is not a fallback for
-missing MongoDB data. Ten new offline tests cover bounded reads, safe errors,
-cache reuse, percentage labels, month selection, DST and incomplete coverage.</p>
-<p>The table above records the initial pilot check on 12 October. The full dataset was subsequently uploaded and verified; sections 15–16 record completion and the full-data app checks. Use <strong>NO2–DK1 → 2025</strong> for a complete-calendar-year example.</p>
-<p><a href="../docs/transfer-page.md">Implementation, rationale and validation</a>.</p>
-<h3 id="Upload-verification">Upload verification<a class="anchor-link" href="#Upload-verification">¶</a></h3><p>The full upload resumed the 200-document pilot after a fresh Atlas storage check and completed on 13 October. Final verification compared every remote document with local BSON. <code>python -m pipeline.upload_status</code> reads the saved status without database requests. No new ENTSO-E download was required.
-See <a href="../docs/mongodb-upload.md">upload operations</a>.</p>
-</div>
-</div>
-</div>
-</div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=mongodb-full-verification">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="15.-Full-MongoDB-upload-and-final-verification">15. Full MongoDB upload and final verification<a class="anchor-link" href="#15.-Full-MongoDB-upload-and-final-verification">¶</a></h2><p>The existing guarded uploader completed on <strong>13 October 2026 at 16:51:32 UTC
-(18:51:32 Europe/Oslo)</strong>. Its saved report confirms <strong>157,680 documents</strong> and
-compares every remote document with the verified local BSON artifact. The final
-collection count matches; no duplicate documents or unverified completion is
-claimed. These values were read from the completed uploader report, not from
-a new execution of earlier notebook cells.</p>
-<table>
-<thead>
-<tr>
-<th>Measurement</th>
-<th>Final result</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Documents uploaded and finally verified</td>
-<td>157,680</td>
-</tr>
-<tr>
-<td>BSON data bytes</td>
-<td>29,135,760</td>
-</tr>
-<tr>
-<td>Collection index bytes</td>
-<td>9,756,672</td>
-</tr>
-<tr>
-<td>Project data plus indexes</td>
-<td>38,892,432 bytes (37.09 MiB)</td>
-</tr>
-<tr>
-<td>All inspected user databases</td>
-<td>38,929,382 bytes (37.13 MiB)</td>
-</tr>
-<tr>
-<td>Project / cluster stop limits</td>
-<td>64 / 256 MiB</td>
-</tr>
-</tbody>
-</table>
-<p>These are dated measurements and include indexes. The conservative admission
-checks remained active throughout the upload; no service upgrade, quota reset
-or new ENTSO-E download was used. <code>python -m pipeline.upload_status</code> shows the
-saved completed verification without a database request.</p>
-<p>The subsequent full-data Streamlit check is documented in section 16.
-See <a href="../docs/mongodb-upload.md">upload operations and results</a>.</p>
-</div>
-</div>
-</div>
-</div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=full-app-verification">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="16.-Final-local-app-check-with-full-MongoDB-data">16. Final local app check with full MongoDB data<a class="anchor-link" href="#16.-Final-local-app-check-with-full-MongoDB-data">¶</a></h2><p>The actual Streamlit transfer page was tested against live MongoDB after the
-completed upload. All nine 2025 connection views had full hourly coverage and
-rendered without errors or missing-data warnings. The source is MongoDB, not
-a local artifact substituted for unavailable database data.</p>
-<table>
-<thead>
-<tr>
-<th>Connection</th>
-<th style="text-align:right">Complete 2025 hours</th>
-<th style="text-align:right">Import (MWh)</th>
-<th style="text-align:right">Export (MWh)</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>NO1-SE3</td>
-<td style="text-align:right">8,760</td>
-<td style="text-align:right">6,140,554</td>
-<td style="text-align:right">1,623,833</td>
-</tr>
-<tr>
-<td>NO3-SE2</td>
-<td style="text-align:right">8,760</td>
-<td style="text-align:right">1,290,701</td>
-<td style="text-align:right">1,090,740</td>
-</tr>
-<tr>
-<td>NO4-SE1</td>
-<td style="text-align:right">8,760</td>
-<td style="text-align:right">522,541</td>
-<td style="text-align:right">1,294,926</td>
-</tr>
-<tr>
-<td>NO4-SE2</td>
-<td style="text-align:right">8,760</td>
-<td style="text-align:right">136,012</td>
-<td style="text-align:right">588,633</td>
-</tr>
-<tr>
-<td>NO4-FI</td>
-<td style="text-align:right">8,760</td>
-<td style="text-align:right">47,295</td>
-<td style="text-align:right">277,231</td>
-</tr>
-<tr>
-<td>NO2-DK1</td>
-<td style="text-align:right">8,760</td>
-<td style="text-align:right">1,153,915</td>
-<td style="text-align:right">8,157,331</td>
-</tr>
-<tr>
-<td>NO2-NL</td>
-<td style="text-align:right">8,760</td>
-<td style="text-align:right">415,765</td>
-<td style="text-align:right">2,791,009</td>
-</tr>
-<tr>
-<td>NO2-DE-LU</td>
-<td style="text-align:right">8,760</td>
-<td style="text-align:right">767,420</td>
-<td style="text-align:right">7,787,682</td>
-</tr>
-<tr>
-<td>NO2-GB</td>
-<td style="text-align:right">8,760</td>
-<td style="text-align:right">450,217</td>
-<td style="text-align:right">9,763,524</td>
-</tr>
-</tbody>
-</table>
-<p>NO2-DK1 also passed both partial-year views: 1,969 hours in 2024 and 6,791
-in 2026. Partial years are explicitly labelled. The 2025 energy totals match
-section 7. January/March selection preserves a gap for February, empty month
-selection gives a helpful message, and month changes make no new database query.</p>
-<p>The check made 11 bounded reads totalling 13,394,040 projected BSON
-bytes (12.77 MiB), with zero database writes. Last read: <strong>2026-10-13T18:05:47+00:00</strong>.
-The saved report is <code>no_sync/full_transfer_app_verification.json</code>.</p>
-<p>This verifies the local app integration. It does not establish the current state of the hosted Streamlit Cloud app.</p>
+<p>The MongoDB uploader applies fresh storage checks, bounded batches, stable document IDs, rate limits and read-back verification. Section 12.4 records the completed upload. The raw intervals remain in Cassandra.</p>
+<h3 id="12.4-MongoDB-upload-and-verification">12.4 MongoDB upload and verification<a class="anchor-link" href="#12.4-MongoDB-upload-and-verification">¶</a></h3><p><code>pipeline/entsoe_mongo.py</code> uploads the Spark-curated BSON to <code>ind320_energy.hourly_flows</code> using PyMongo, stable document IDs, bounded batches, storage/rate checks and read-back verification. Run <code>python -m pipeline.entsoe_mongo --mode upload</code> from the project root to reproduce or resume with the verified local artifact and your own credentials; this command writes to MongoDB. <code>python -m pipeline.upload_status</code> only reads saved progress.</p>
+<p>The saved final report records completion on <strong>13 October 2026 at 16:51:32 UTC</strong>: all <strong>157,680 remote documents</strong> were compared with local BSON. Project data plus indexes measured <strong>37.09 MiB</strong>, below the 64 MiB project limit; inspected user databases combined measured <strong>37.13 MiB</strong>, below 256 MiB. These are historical measurements, not a live audit. The raw Cassandra intervals remain available. See <a href="../docs/mongodb-upload.md">upload method and results</a>.</p>
 </div>
 </div>
 </div>
