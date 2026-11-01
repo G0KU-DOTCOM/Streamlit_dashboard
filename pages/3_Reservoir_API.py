@@ -5,7 +5,8 @@ from dashboard.reservoir_views import source_details
 
 st.title("Reservoir API — Sources and Areas")
 st.write(
-    "Use Data Table and Data Plot to explore the same period and area selection. "
+    "Data Table and Data Plot share period and area selections. "
+    "Weather Analysis shares the area and has a separate weather year. "
     "This page explains the source and the geographical groups."
 )
 history = load_data_or_stop()

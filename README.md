@@ -20,6 +20,13 @@ From this folder, with the project's Python 3.12 environment:
 - **About:** project purpose, data workflow, sources and limitations.
 - **Cross Border Transfers:** MongoDB import/export data, connection/year choice,
   an energy pie and multiple-month line plots. Missing hours are clearly flagged.
+- **Weather Analysis:** shares the reservoir area selection, with a separate weather
+  year. Saved ERA5 hourly means are loaded automatically; missing data require an
+  explicit download. The NO3 2024 summary is included for the default example.
+
+The area selector supports **All areas** for reservoir comparisons and a concrete
+area for weather. The assignment's VASS weather groups are East (RS+RØ), West (RV)
+and North (RM+RN). No national or separate VASS4 weather sample is available.
 
 NVE history is cached for 24 hours (8 MiB maximum response); area metadata for
 7 days (128 KiB maximum). The period selection filters **after downloading**:
@@ -36,7 +43,8 @@ access, but no Docker or database credentials, and make no database writes.
 | `dashboard/` | Shared NVE loader, selections, tables and plot helpers |
 | `pipeline/` | ENTSO-E parsing, budgets, collection, curation and guarded upload |
 | `entsoe_plan.json` | Frozen period, connections and enforced storage/download limits |
-| `notebooks/` | Part 1 archive and Part 2 analysis with saved outputs |
+| `notebooks/` | Part 1 archive and Part 2/3 analysis with saved outputs |
+| `data/weather/` | Small ERA5 hourly regional means for the hosted app |
 | `tests/` | Offline correctness, capacity and app-navigation checks |
 | `docs/` | Requirements review, progress and cleanup decisions |
 | `requirements.txt` | Hosted Streamlit dependencies |

@@ -75,8 +75,9 @@ class ReservoirViewsTests(unittest.TestCase):
         self.assert_ok(app)
         self.assertEqual(app.radio[0].value, 'VASS')
         self.assertEqual(tuple(app.select_slider[0].value), ('2026-01', '2026-01'))
-        for column in app.selectbox[0].options:
-            app.selectbox[0].set_value(column).run()
+        column_selector = next(widget for widget in app.selectbox if widget.label == 'Choose a column')
+        for column in column_selector.options:
+            next(widget for widget in app.selectbox if widget.label == 'Choose a column').set_value(column).run()
             self.assert_ok(app)
         app.radio[0].set_value('NO').run()
         # Visit pages without widgets: their cleanup must not discard selection.
