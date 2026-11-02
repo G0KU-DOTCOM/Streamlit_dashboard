@@ -10,7 +10,7 @@
 | Resolve CLI project root as the parent of `pipeline/` | Preserve the existing cache, secrets, plan, locks and progress-ledger locations. |
 | Use `python -m pipeline.<module>` | Make package imports work consistently from the project root. |
 | Move the long progress history to `docs/progress.md` and shorten README | Make setup, navigation, directory purpose and current status easier to find. |
-| Add `requirements-notebook.txt`; move `ipykernel` out of app dependencies | Separate local Spark/notebook tools from the hosted app's dependencies. Versions match the checked local Spark, Cassandra driver and PyMongo. No packages were installed or upgraded during cleanup. |
+| Initially separate local notebook tools from app dependencies | Keep the hosted app's installation smaller. On 2 November, this split was reversed at the user's request: all app, notebook and pipeline dependencies now share `requirements.txt`. Existing version pins were retained. |
 
 `main.py` and `pages/` retain Streamlit's normal multipage structure. The plan
 stays at the root so the existing budget and report workflows use the same

@@ -51,15 +51,14 @@ access, but no Docker or database credentials, and make no database writes.
 | `data/weather/` | Small ERA5 hourly regional means for the hosted app |
 | `tests/` | Offline correctness, capacity and app-navigation checks |
 | `docs/` | Requirements review, progress and cleanup decisions |
-| `requirements.txt` | Hosted Streamlit dependencies |
-| `requirements-notebook.txt` | Additional local notebook/pipeline dependencies |
+| `requirements.txt` | Shared app, notebook and pipeline dependencies |
 | `no_sync/` | Ignored local cache, reports, progress ledgers and curated BSON |
 | `.streamlit/secrets.toml` | Ignored local credentials; never commit this file |
 
 ## Local notebook and pipeline
 
 Use Python 3.12 and Java 17. Install local dependencies with
-`.venv/bin/python -m pip install -r requirements-notebook.txt`.
+`.venv/bin/python -m pip install -r requirements.txt`.
 Spark uses PySpark 3.5.1 and the matching Cassandra connector. Start the local
 Cassandra container for Spark/Cassandra notebook sections. Local credentials
 use `[mongo] uri` and `[entsoe] token` in `.streamlit/secrets.toml`; hosted app
