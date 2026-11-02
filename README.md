@@ -23,9 +23,13 @@ From this folder, with the project's Python 3.12 environment:
 - **Weather Analysis:** shares the reservoir area selection, with a separate weather
   year. Saved ERA5 hourly means are loaded automatically; missing data require an
   explicit download. The NO3 2024 summary is included for the default example.
+- **Reservoir Analysis:** shares the area selection and has STL/Spectrogram tabs
+  for weekly filling. A separate multi-year period applies to both tabs; STL has
+  seasonal/trend smoother and robust controls, and the spectrogram has window
+  length/overlap controls. The functions are shared with the Part 3 notebook.
 
 The area selector supports **All areas** for reservoir comparisons and a concrete
-area for weather. The assignment's VASS weather groups are East (RS+RØ), West (RV)
+area for weather and reservoir analysis. The assignment's VASS weather groups are East (RS+RØ), West (RV)
 and North (RM+RN). No national or separate VASS4 weather sample is available.
 
 NVE history is cached for 24 hours (8 MiB maximum response); area metadata for

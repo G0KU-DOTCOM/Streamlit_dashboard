@@ -3,3 +3,5 @@ pandas
 requests
 streamlit
 pymongo==4.18.1
+scipy
+statsmodels
