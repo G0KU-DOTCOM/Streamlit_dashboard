@@ -23,6 +23,7 @@ class ReservoirSelection:
     start: str
     end: str
     labels: dict
+    area_number: int | None = None
 
 
 def remember_selection(key, widget_key):
@@ -31,23 +32,8 @@ def remember_selection(key, widget_key):
     st.session_state[key] = st.session_state[widget_key]
 
 
-def reservoir_controls(view):
-    """Render identical controls on table/plot pages and retain their selections."""
-    history = load_data_or_stop()
-    dates = history["observation_date"]
-    months = pd.period_range(dates.min(), dates.max(), freq="M").astype(str).tolist()
-    default = (months[max(0, len(months) - 12)], months[-1])
-    saved = st.session_state.get("nve_period", default)
-    # A refreshed response may change the available months.
-    if len(saved) != 2 or any(month not in months for month in saved):
-        saved = default
-    st.session_state["nve_period"] = tuple(sorted(saved))
-    period_key = f"_nve_period_{view}"
-    start, end = st.select_slider(
-        "Choose a period (months)", options=months,
-        value=st.session_state["nve_period"], key=period_key,
-        on_change=remember_selection, args=("nve_period", period_key), disabled=len(months) == 1,
-    )
+def area_controls(view, history):
+    """Share area type and concrete area across reservoir and weather pages."""
     area_type = st.session_state.get("nve_area_type", "EL")
     st.session_state["nve_area_type"] = area_type if area_type in ("EL", "NO", "VASS") else "EL"
     area_key = f"_nve_area_type_{view}"
@@ -57,17 +43,10 @@ def reservoir_controls(view):
         key=area_key, on_change=remember_selection, args=("nve_area_type", area_key),
     )
     st.caption({
-        "EL": "Electricity price areas. Each area is shown separately.",
+        "EL": "Electricity price areas.",
         "NO": "Norway as a whole (area number 0).",
-        "VASS": "NVE watercourse regions. Each area is shown separately.",
+        "VASS": "NVE watercourse regions.",
     }[area_type])
-    st.caption(
-        "Period and area selections are shared by the table and plot pages. "
-        "The period filters cached NVE history after download."
-    )
-    selected = history.loc[
-        dates.dt.strftime("%Y-%m").between(start, end) & history["area_type"].eq(area_type)
-    ].copy()
     # Include known areas without observations so their absence remains visible.
     numbers = history.loc[history["area_type"].eq(area_type), "area_number"].unique()
     labels = {number: f"{area_type}{number}" for number in sorted(numbers)}
@@ -78,11 +57,56 @@ def reservoir_controls(view):
     except NVEDataError as exc:
         st.warning(str(exc))
     labels = dict(sorted(labels.items()))
+    # Keep an area choice per type; switching EL/VASS must not reinterpret its number.
+    options = [None] + list(labels)
+    saved_key = f"nve_area_number_{area_type}"
+    default_number = next(iter(labels)) if len(labels) == 1 else None
+    saved_number = st.session_state.get(saved_key, default_number)
+    if saved_number not in options:
+        saved_number = default_number
+    st.session_state[saved_key] = saved_number
+    widget_key = f"_{saved_key}_{view}"
+    area_number = st.selectbox(
+        "Choose area", options=options, index=options.index(saved_number),
+        format_func=lambda number: "All areas" if number is None else labels[number],
+        key=widget_key, on_change=remember_selection, args=(saved_key, widget_key),
+    )
+    st.caption("Area choices are shared by the reservoir and weather pages.")
+    return area_type, area_number, labels
+
+
+def reservoir_controls(view):
+    """Render shared reservoir controls and filter after the cached download."""
+    history = load_data_or_stop()
+    dates = history["observation_date"]
+    months = pd.period_range(dates.min(), dates.max(), freq="M").astype(str).tolist()
+    default = (months[max(0, len(months) - 12)], months[-1])
+    saved = st.session_state.get("nve_period", default)
+    if len(saved) != 2 or any(month not in months for month in saved):
+        saved = default
+    st.session_state["nve_period"] = tuple(sorted(saved))
+    period_key = f"_nve_period_{view}"
+    start, end = st.select_slider(
+        "Choose a period (months)", options=months,
+        value=st.session_state["nve_period"], key=period_key,
+        on_change=remember_selection, args=("nve_period", period_key), disabled=len(months) == 1,
+    )
+    area_type, area_number, labels = area_controls(view, history)
+    selected = history.loc[
+        dates.dt.strftime("%Y-%m").between(start, end) & history["area_type"].eq(area_type)
+    ].copy()
+    if area_number is not None:
+        selected = selected.loc[selected["area_number"].eq(area_number)]
+        labels = {area_number: labels[area_number]}
+    st.caption(
+        "The reservoir period is shared by Data Table and Data Plot. "
+        "It filters cached NVE history after download."
+    )
     missing = [name for number, name in labels.items() if not selected["area_number"].eq(number).any()]
     if missing:
         st.info("No observations in this period for: " + ", ".join(missing) + ".")
     st.caption(f"{len(selected):,} weekly area observations · {start} to {end}")
-    return ReservoirSelection(history, selected, area_type, start, end, labels)
+    return ReservoirSelection(history, selected, area_type, start, end, labels, area_number)
 
 
 def area_lines(selection, column):
