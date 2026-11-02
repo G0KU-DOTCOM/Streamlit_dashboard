@@ -24,14 +24,15 @@ the app's MongoDB credentials in Streamlit Cloud Secrets when hosting it.
 
 - **Data Table:** reservoir measurements and weekly trends for selected areas.
 - **Data Plot:** reservoir curves using the same period and area selection.
-- **Reservoir API:** NVE source details and geographical definitions.
-- **Cross Border Transfers:** MongoDB import/export data with connection, year
-  and month choices. The annual pie is separate from the selected-month curves.
-- **About:** project context and limitations.
-- **Weather Analysis:** ERA5 regional means and explicit download controls.
-  The SPC/LOF tabs are the next implementation step.
 - **Reservoir Analysis:** STL and Spectrogram tabs for weekly filling, with a
   shared area choice and a separate multi-year analysis period.
+- **Weather Analysis:** ERA5 regional means and explicit download controls.
+  SPC and LOF tabs show precipitation outliers and temperature anomalies,
+  with adjustable parameters, plots, counts and flagged-hour tables.
+- **Cross Border Transfers:** MongoDB import/export data with connection, year
+  and month choices. The annual pie is separate from the selected-month curves.
+- **Reservoir API:** NVE source details and geographical definitions.
+- **About:** project context and limitations.
 
 ## Data and limitations
 
@@ -113,8 +114,8 @@ not make the full database notebook reproducible after cloning.
 The ordinary tests use fixtures and make no live API/database requests.
 Set `RUN_SPARK_TESTS=1` to include the optional local Spark math checks.
 
-Remaining Part 3 work: the Streamlit SPC/LOF tabs, logical page ordering,
-the 300–500-word work log and final submission checks. Review the AI statement
+Remaining Part 3 work: the 300–500-word work log and final submission checks.
+Review the AI statement
 and personal experiences, execute all notebook cells, export the PDF with
 outputs, and verify the hosted app after publishing the code.
 

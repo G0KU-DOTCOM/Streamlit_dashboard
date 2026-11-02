@@ -6,11 +6,13 @@ from pathlib import Path
 from unittest.mock import Mock, patch
 
 import pandas as pd
+import matplotlib.pyplot as plt
 from streamlit.testing.v1 import AppTest
 
 from dashboard import load_data as nve
 from dashboard import weather_data as weather
 from dashboard import weather_views
+from dashboard import reservoir_analysis as analysis
 from test_nve_data import observation
 from test_reservoir_views import fixtures
 
@@ -110,12 +112,12 @@ class WeatherPageTests(unittest.TestCase):
         app.switch_page('pages/1_Data_Table.py').run()
         app.selectbox(key='_nve_area_number_EL_table').set_value(3).run()
         self.assertEqual(app.dataframe[0].value['area_number'].tolist(), [3])
-        app.switch_page('pages/6_Weather_Analysis.py').run()
+        app.switch_page('pages/4_Weather_Analysis.py').run()
         self.assert_ok(app)
         self.assertEqual(app.selectbox(key='_nve_area_number_EL_weather').value, 3)
         self.assertEqual(app.selectbox(key='_weather_year').value, 2024)
         self.assertTrue(app.button(key='download_weather').disabled)
-        self.assertEqual(len(app.dataframe), 1)
+        self.assertEqual(len(app.dataframe), 2)
         app.selectbox(key='_nve_area_number_EL_weather').set_value(2).run()
         self.assert_ok(app)
         self.assertFalse(app.dataframe)
@@ -125,7 +127,7 @@ class WeatherPageTests(unittest.TestCase):
         app.switch_page('pages/2_Data_Plot.py').run()
         self.assert_ok(app)
         self.assertEqual(app.selectbox(key='_nve_area_number_EL_plot').value, 2)
-        app.switch_page('pages/6_Weather_Analysis.py').run()
+        app.switch_page('pages/4_Weather_Analysis.py').run()
         self.assertEqual(app.selectbox(key='_weather_year').value, 2023)
         app.button(key='download_weather').click().run()
         self.assert_ok(app)
@@ -134,7 +136,7 @@ class WeatherPageTests(unittest.TestCase):
 
     def test_all_and_national_selections_show_no_stale_weather(self):
         app = AppTest.from_file(str(ROOT / 'main.py')).run()
-        app.switch_page('pages/6_Weather_Analysis.py').run()
+        app.switch_page('pages/4_Weather_Analysis.py').run()
         self.assert_ok(app)
         self.assertTrue(any('Choose a single area' in item.value for item in app.info))
         self.read.assert_not_called()
@@ -143,6 +145,46 @@ class WeatherPageTests(unittest.TestCase):
         self.assertFalse(app.dataframe)
         self.assertTrue(any('No weather sample' in item.value for item in app.info))
         self.prepare.assert_not_called()
+
+    def test_analysis_tabs_match_notebook_results_and_controls_reuse_saved_data(self):
+        # Use the small saved NO3 summary, with no API requests or raw point-data reads.
+        self.read.side_effect = weather.read_weather_summary
+        with patch.object(analysis, 'plot_precipitation_spc', wraps=analysis.plot_precipitation_spc) as spc, \
+                patch.object(analysis, 'plot_temperature_lof', wraps=analysis.plot_temperature_lof) as lof:
+            app = AppTest.from_file(str(ROOT / 'main.py')).run()
+            app.session_state['nve_area_number_EL'] = 3
+            app.switch_page('pages/4_Weather_Analysis.py').run()
+            self.assert_ok(app)
+            self.assertEqual([tab.label for tab in app.tabs], ['Outlier / SPC', 'Anomaly / LOF'])
+            self.assertEqual(spc.call_args.kwargs, dict(cutoff_frequency=1/30, n_std=3.0))
+            self.assertEqual(lof.call_args.kwargs, dict(outlier_fraction=.01))
+            self.assertEqual(len(spc.call_args.args[0]), 8784)
+            metrics = {item.label: item.value for item in app.metric}
+            self.assertEqual(metrics['Outlier hours'], '638')
+            self.assertEqual(metrics['Anomaly hours'], '88')
+            self.assertEqual(len(app.dataframe[0].value), 638)
+            self.assertEqual(len(app.dataframe[1].value), 88)
+            self.assertEqual(str(app.dataframe[0].value.time.dt.tz), 'UTC')
+            self.assertTrue(app.dataframe[0].value.time.isin(spc.call_args.args[0].index).all())
+            self.assertFalse(plt.get_fignums())
+
+            app.number_input(key='spc_deviations').set_value(4.).run()
+            self.assert_ok(app)
+            self.assertLess(len(app.dataframe[0].value), 638)
+            app.number_input(key='spc_cutoff').set_value(.1).run()
+            self.assertEqual(spc.call_args.kwargs, dict(cutoff_frequency=.1, n_std=4.0))
+            app.number_input(key='lof_percentage').set_value(2.).run()
+            self.assert_ok(app)
+            self.assertEqual(lof.call_args.kwargs, dict(outlier_fraction=.02))
+            self.assertEqual(len(app.dataframe[1].value), 176)
+            self.prepare.assert_not_called()
+            self.assertEqual(self.read.call_count, 1, 'Analysis changes must reuse the weather cache')
+
+            app.selectbox(key='_nve_area_number_EL_weather').set_value(2).run()
+            self.assert_ok(app)
+            self.assertFalse(app.tabs)
+            self.assertFalse(app.dataframe)
+            self.prepare.assert_not_called()
 
 
 if __name__ == '__main__':

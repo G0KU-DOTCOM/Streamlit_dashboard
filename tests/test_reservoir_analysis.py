@@ -58,7 +58,7 @@ class ReservoirAnalysisTests(unittest.TestCase):
         app = AppTest.from_file(str(ROOT / 'main.py')).run()
         app.switch_page('pages/1_Data_Table.py').run()
         app.selectbox(key='_nve_area_number_EL_table').set_value(3).run()
-        app.switch_page('pages/7_Reservoir_Analysis.py').run()
+        app.switch_page('pages/3_Reservoir_Analysis.py').run()
         self.assert_ok(app)
         self.assertEqual(app.selectbox(key='_nve_area_number_EL_analysis').value, 3)
         self.assertEqual([tab.label for tab in app.tabs], ['STL', 'Spectrogram'])
@@ -90,7 +90,7 @@ class ReservoirAnalysisTests(unittest.TestCase):
     def test_short_period_missing_weeks_and_window_changes_are_safe(self):
         app = AppTest.from_file(str(ROOT / 'main.py')).run()
         app.session_state['nve_area_number_EL'] = 3
-        app.switch_page('pages/7_Reservoir_Analysis.py').run()
+        app.switch_page('pages/3_Reservoir_Analysis.py').run()
         app.number_input(key='spectrum_window').set_value(20).run()
         self.assert_ok(app)
         self.assertEqual(app.number_input(key='spectrum_overlap').value, 19)
@@ -107,7 +107,7 @@ class ReservoirAnalysisTests(unittest.TestCase):
 
     def test_all_areas_and_area_without_data_do_not_produce_combined_analyses(self):
         app = AppTest.from_file(str(ROOT / 'main.py')).run()
-        app.switch_page('pages/7_Reservoir_Analysis.py').run()
+        app.switch_page('pages/3_Reservoir_Analysis.py').run()
         self.assert_ok(app)
         self.assertTrue(any('Choose one area' in item.value for item in app.info))
         self.stl.assert_not_called()
