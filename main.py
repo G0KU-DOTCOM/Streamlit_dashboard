@@ -11,7 +11,8 @@ st.write(
     "levels, capacity and stored energy, downloaded directly from NVE's API. "
     "Open Data Table or Data Plot to choose a period and area. "
     "Area choices are shared with Weather Analysis, where ERA5 weather data "
-    "can be loaded for the selected region. Reservoir API explains "
+    "can be loaded for the selected region. Reservoir Analysis shows STL and a "
+    "spectrogram of weekly filling for the same area. Reservoir API explains "
     "the source and geographical areas. Cross Border Transfers shows curated "
     "ENTSO-E import/export data read from MongoDB."
 )
