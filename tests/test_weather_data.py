@@ -149,7 +149,7 @@ class WeatherPageTests(unittest.TestCase):
     def test_analysis_tabs_match_notebook_results_and_controls_reuse_saved_data(self):
         # Use the small saved NO3 summary, with no API requests or raw point-data reads.
         self.read.side_effect = weather.read_weather_summary
-        with patch.object(analysis, 'plot_precipitation_spc', wraps=analysis.plot_precipitation_spc) as spc, \
+        with patch.object(analysis, 'plot_temperature_spc', wraps=analysis.plot_temperature_spc) as spc, \
                 patch.object(analysis, 'plot_temperature_lof', wraps=analysis.plot_temperature_lof) as lof:
             app = AppTest.from_file(str(ROOT / 'main.py')).run()
             app.session_state['nve_area_number_EL'] = 3
@@ -159,10 +159,14 @@ class WeatherPageTests(unittest.TestCase):
             self.assertEqual(spc.call_args.kwargs, dict(cutoff_frequency=1/30, n_std=3.0))
             self.assertEqual(lof.call_args.kwargs, dict(outlier_fraction=.01))
             self.assertEqual(len(spc.call_args.args[0]), 8784)
+            pd.testing.assert_series_equal(spc.call_args.args[0], lof.call_args.args[0])
             metrics = {item.label: item.value for item in app.metric}
-            self.assertEqual(metrics['Outlier hours'], '638')
+            self.assertEqual(metrics['Outlier hours'], '15')
             self.assertEqual(metrics['Anomaly hours'], '88')
-            self.assertEqual(len(app.dataframe[0].value), 638)
+            self.assertEqual(len(app.dataframe[0].value), 15)
+            self.assertEqual(app.dataframe[0].value.columns.tolist(),
+                             ['time', 'temperature_c', 'lower_limit_c', 'upper_limit_c'])
+            self.assertTrue(metrics['Robust standard deviation'].endswith('°C'))
             self.assertEqual(len(app.dataframe[1].value), 88)
             self.assertEqual(str(app.dataframe[0].value.time.dt.tz), 'UTC')
             self.assertTrue(app.dataframe[0].value.time.isin(spc.call_args.args[0].index).all())
@@ -170,7 +174,7 @@ class WeatherPageTests(unittest.TestCase):
 
             app.number_input(key='spc_deviations').set_value(4.).run()
             self.assert_ok(app)
-            self.assertLess(len(app.dataframe[0].value), 638)
+            self.assertLess(len(app.dataframe[0].value), 15)
             app.number_input(key='spc_cutoff').set_value(.1).run()
             self.assertEqual(spc.call_args.kwargs, dict(cutoff_frequency=.1, n_std=4.0))
             app.number_input(key='lof_percentage').set_value(2.).run()

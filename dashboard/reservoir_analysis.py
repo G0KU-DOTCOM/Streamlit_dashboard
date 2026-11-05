@@ -89,9 +89,10 @@ def plot_reservoir_spectrogram(filling_fraction, window_length=156, window_overl
     return fig
 
 
-def plot_precipitation_spc(precipitation, cutoff_frequency=1/30, n_std=3):
-    """Return a figure, summary and outlier table for an hourly precipitation series."""
-    series = precipitation.sort_index()
+# Teacher clarification: DCT/SPC should use temperature to calculate SATV.
+def plot_temperature_spc(temperature, cutoff_frequency=1/30, n_std=3):
+    """Return a figure, summary and outlier table for an hourly temperature series."""
+    series = temperature.sort_index()
     if not isinstance(series.index, pd.DatetimeIndex) or len(series) < 3:
         raise ValueError("Use a time series with at least three hourly observations.")
     if not (series.index[1:] - series.index[:-1] == pd.Timedelta(hours=1)).all():
@@ -119,15 +120,15 @@ def plot_precipitation_spc(precipitation, cutoff_frequency=1/30, n_std=3):
     upper = center + n_std * robust_sigma
     outlier_mask = (values < lower) | (values > upper)
 
-    # Plot the original precipitation and control limits, without the filtered deviations.
+    # SATV is used for the limits; plot the original temperature and flagged hours.
     fig, ax = plt.subplots(figsize=(12, 4))
-    ax.plot(series.index, values, color="tab:blue", linewidth=0.7, label="Average precipitation")
+    ax.plot(series.index, values, color="tab:blue", linewidth=0.7, label="Average temperature")
     ax.plot(series.index, lower, color="darkorange", linestyle="--", linewidth=0.9, label="Lower SPC limit")
     ax.plot(series.index, upper, color="darkorange", linestyle="--", linewidth=0.9, label="Upper SPC limit")
     ax.scatter(series.index[outlier_mask], values[outlier_mask],
                color="crimson", s=12, zorder=3, label="Outliers")
-    ax.set(title="Outliers in average precipitation – DCT/SPC",
-           xlabel="Time (UTC)", ylabel="Precipitation per hour (mm)")
+    ax.set(title="Outliers in average temperature – DCT/SPC",
+           xlabel="Time (UTC)", ylabel="Temperature (°C)")
     ax.legend(loc="upper left", ncol=2)
     ax.grid(alpha=0.2)
     fig.tight_layout()
@@ -136,10 +137,10 @@ def plot_precipitation_spc(precipitation, cutoff_frequency=1/30, n_std=3):
         "number_of_hours": len(values),
         "number_of_outliers": int(outlier_mask.sum()),
         "percentage": 100 * outlier_mask.mean(),
-        "robust_standard_deviation_mm": float(robust_sigma),
+        "robust_standard_deviation_c": float(robust_sigma),
     }
     outliers = pd.DataFrame({
-        "precipitation_mm": values, "lower_limit_mm": lower, "upper_limit_mm": upper,
+        "temperature_c": values, "lower_limit_c": lower, "upper_limit_c": upper,
     }, index=series.index).loc[outlier_mask]
     return fig, summary, outliers
 

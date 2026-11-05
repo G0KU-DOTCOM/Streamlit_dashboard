@@ -27,7 +27,7 @@ the app's MongoDB credentials in Streamlit Cloud Secrets when hosting it.
 - **Reservoir Analysis:** STL and Spectrogram tabs for weekly filling, with a
   shared area choice and a separate multi-year analysis period.
 - **Weather Analysis:** ERA5 regional means and explicit download controls.
-  SPC and LOF tabs show precipitation outliers and temperature anomalies,
+  SPC and LOF tabs show temperature outliers and anomalies,
   with adjustable parameters, plots, counts and flagged-hour tables.
 - **Cross Border Transfers:** MongoDB import/export data with connection, year
   and month choices. The annual pie is separate from the selected-month curves.
@@ -48,6 +48,11 @@ instructor acceptance has not been established. Missing weeks stay missing.
 areas are NO1–NO5. The assignment's other groups are East (RS+RØ), West (RV)
 and North (RM+RN); these group NVE administrative regions, not detailed
 hydrological catchments. No national or separate VASS4 weather sample exists.
+
+The teacher clarified that the DCT/SPC analysis should use temperature,
+despite the original assignment text mentioning precipitation. Both SPC and
+LOF therefore analyse temperature. Temperature and precipitation are still
+downloaded as required by the data-collection task.
 
 `data/weather/NO3_era5_2024-01-01_2024-12-31_hourly.csv.gz` contains 8784 UTC
 hours of ERA5 means across the 1000 NO3 locations. Temperature is in °C;
