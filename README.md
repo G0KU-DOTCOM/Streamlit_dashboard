@@ -119,10 +119,10 @@ not make the full database notebook reproducible after cloning.
 The ordinary tests use fixtures and make no live API/database requests.
 Set `RUN_SPARK_TESTS=1` to include the optional local Spark math checks.
 
-Remaining Part 3 work: the 300–500-word work log and final submission checks.
-Review the AI statement
-and personal experiences, execute all notebook cells, export the PDF with
-outputs, and verify the hosted app after publishing the code.
+The Part 3 work log and screencast are complete, and the video link is in the
+notebook. All notebook cells have been run, and the hosted app has been checked.
+The remaining submission step is to export the notebook via HTML to PDF and
+check that plots, tables and links are readable.
 
 ## Links
 
