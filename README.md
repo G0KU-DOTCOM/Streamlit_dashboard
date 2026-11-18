@@ -60,6 +60,10 @@ precipitation is the preceding hour's amount in mm. `point_count` records
 coverage. This small summary lets the app reuse the notebook's download.
 Other area/year combinations start downloading only after a button press.
 Raw point data and resumable batches remain under ignored `no_sync/weather/`.
+The Part 4 notebook also uses `data/weather/NO3_era5_2023-2025_hourly_sample100.csv.gz`
+for correlation and forecast experiments. It covers the same 100 NO3 locations
+in all three years. The notebook compares this sample with the 1,000-point
+summary in 2024.
 Weather attribution: Open-Meteo / ERA5,
 [CC BY 4.0](https://open-meteo.com/en/licence). Boundaries: [NVE Atlas](https://atlas.nve.no).
 

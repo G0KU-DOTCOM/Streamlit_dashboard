@@ -69,6 +69,12 @@ class WeatherDataTests(unittest.TestCase):
                 self.assertEqual(len(raw), 72)
                 cached = weather.download_weather('NO3', '2024-01-01', '2024-01-01', hourly=True)
                 pd.testing.assert_frame_equal(means, cached)
+                subset = weather.download_weather(
+                    'NO3', '2024-01-01', '2024-01-01', hourly=True, point_ids=[1, 2],
+                )
+                self.assertTrue(subset.temperature_2m.eq(15).all())
+                self.assertTrue(subset.precipitation.eq(1.5).all())
+                self.assertTrue(subset.point_count.eq(2).all())
 
     def test_summary_rejects_incomplete_coverage(self):
         with tempfile.TemporaryDirectory() as directory, patch.object(weather, 'ROOT', Path(directory)):

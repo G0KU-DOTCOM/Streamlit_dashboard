@@ -1,5 +1,7 @@
 """Shared ERA5 downloads and small hourly summaries for the notebook and app."""
+from hashlib import sha256
 from pathlib import Path
+from tempfile import TemporaryDirectory
 import requests
 import pandas as pd
 import time
@@ -36,13 +38,23 @@ def _finish_hourly(parts, expected_times, point_count):
     return totals.reset_index()
 
 
-def download_weather(region, start_date, end_date, batch_size=100, *, hourly=False, progress=None):
+def download_weather(region, start_date, end_date, batch_size=100, *, hourly=False, progress=None,
+                     point_ids=None):
     """Retrieve hourly ERA5 temperature and precipitation for the saved region locations."""
     root = ROOT
     locations = pd.read_csv(root / "data/geography/weather_locations.csv")
     locations = locations.loc[locations["region"].eq(region)].sort_values("point_id")
     if locations.empty:
         raise ValueError(f"Unknown region: {region}")
+    cache_region = region
+    if point_ids is not None:
+        selected_ids = sorted(set(point_ids))
+        locations = locations.loc[locations["point_id"].isin(selected_ids)]
+        if not selected_ids or len(locations) != len(selected_ids):
+            raise ValueError(f"A weather sample must contain known point IDs in {region}.")
+        # Include the point set in cache names so samples and the full region stay distinct.
+        sample_key = sha256(",".join(map(str, selected_ids)).encode()).hexdigest()[:16]
+        cache_region = f"{region}_sample_{sample_key}"
 
     def report(message, completed=0):
         if progress is None:
@@ -58,16 +70,21 @@ def download_weather(region, start_date, end_date, batch_size=100, *, hourly=Fal
                                    freq="h", inclusive="left", tz="UTC")
     folder = root / "no_sync/weather"
     folder.mkdir(parents=True, exist_ok=True)
-    saved_file = folder / f"{region}_era5_{start_date}_{end_date}.csv.gz"
-    if saved_file.exists():
+    saved_file = folder / f"{cache_region}_era5_{start_date}_{end_date}.csv.gz"
+    full_file = folder / f"{region}_era5_{start_date}_{end_date}.csv.gz"
+    cached_file = saved_file if saved_file.exists() else full_file
+    if cached_file.exists():
         report("Reading saved weather data.")
         if hourly:
-            chunks = pd.read_csv(saved_file, parse_dates=["time"], chunksize=100_000)
+            chunks = pd.read_csv(cached_file, parse_dates=["time"], chunksize=100_000)
+            if point_ids is not None:
+                chunks = (chunk.loc[chunk["point_id"].isin(selected_ids)] for chunk in chunks)
             return _finish_hourly([_hourly_totals(chunk) for chunk in chunks], expected_times, len(locations))
-        return pd.read_csv(saved_file, parse_dates=["time"])
+        raw = pd.read_csv(cached_file, parse_dates=["time"])
+        return raw if point_ids is None else raw.loc[raw["point_id"].isin(selected_ids)]
 
     # Download locations in batches and reuse completed batches on subsequent runs.
-    parts_folder = folder / f"{region}_era5_{start_date}_{end_date}_parts"
+    parts_folder = folder / f"{cache_region}_era5_{start_date}_{end_date}_parts"
     parts_folder.mkdir(exist_ok=True)
     frames = []
     for offset in range(0, len(locations), batch_size):
@@ -114,7 +131,10 @@ def download_weather(region, start_date, end_date, batch_size=100, *, hourly=Fal
             batch_frames.append(frame)
         part = pd.concat(batch_frames, ignore_index=True)
         assert not part.isna().any().any(), "The API response contains missing values."
-        part.to_csv(part_file, index=False, compression="gzip")
+        with TemporaryDirectory(dir=parts_folder) as temporary:
+            batch_output = Path(temporary) / part_file.name
+            part.to_csv(batch_output, index=False, compression="gzip")
+            batch_output.replace(part_file)
         frames.append(_hourly_totals(part) if hourly else part)
         report(f"Saved {offset + len(batch)} of {len(locations)} locations.", offset + len(batch))
         time.sleep(2)
