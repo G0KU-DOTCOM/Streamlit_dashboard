@@ -52,14 +52,15 @@ def forecast_figure(training, prediction, observed):
         go.Scatter(x=forecast_x, y=forecast_y, name="SNARIMAX forecast", mode="lines+markers",
                    line=dict(color=BLUE, dash="dash", width=2), marker=dict(size=4)),
         go.Scatter(x=prediction.index, y=observed * 100, name="Observed after cutoff", mode="lines",
-                   connectgaps=False, line=dict(color="#53687f", width=2)),
+                   connectgaps=False, showlegend=bool(observed.notna().any()),
+                   line=dict(color="#53687f", width=2)),
         go.Scatter(x=prediction.index, y=baseline * 100, name="Last-value reference", mode="lines",
                    line=dict(color="#a9bacb", dash="dot", width=1.5), visible="legendonly"),
     ])
     figure.add_shape(type="line", x0=cutoff, x1=cutoff, y0=0, y1=1, yref="paper",
                      line=dict(color="#a9bacb", width=1))
     figure.add_annotation(x=cutoff, y=1, yref="paper", text="Training ends", showarrow=False,
-                          yshift=12, font=dict(size=11))
+                          yshift=-14, yanchor="top", font=dict(size=11))
     # The play button reveals successive forecast weeks; all values were computed
     # recursively before animation, with no future observations fed into training.
     figure.frames = [go.Frame(
