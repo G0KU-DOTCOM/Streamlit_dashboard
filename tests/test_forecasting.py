@@ -76,3 +76,47 @@ class ReservoirForecastTests(unittest.TestCase):
             with self.subTest(overrides=overrides):
                 with self.assertRaisesRegex(ValueError, message):
                     forecast_reservoir_snarimax(self.history, **{**self.kwargs, **overrides})
+
+    def test_exogenous_forecast_uses_only_selected_training_and_supplied_future_features(self):
+        training, forecast = forecast_reservoir_snarimax(self.history, **self.kwargs)
+        features = self.history.set_index("observation_date")[["filling_fraction"]].rename(
+            columns={"filling_fraction": "weather"},
+        )
+        future = pd.DataFrame({"weather": 0.5}, index=forecast.index)
+        _, predicted = forecast_reservoir_snarimax(
+            self.history, **self.kwargs, exogenous=features, future_exogenous=future,
+        )
+        model = time_series.SNARIMAX(p=3, d=1, q=3)
+        for observed_date, value in training.items():
+            model.learn_one(float(value), x=features.loc[observed_date].to_dict())
+        np.testing.assert_allclose(predicted, model.forecast(12, xs=future.to_dict("records")))
+
+        changed = features.copy()
+        changed.loc[changed.index > training.index[-1], "weather"] = 999
+        _, second = forecast_reservoir_snarimax(
+            self.history, **self.kwargs, exogenous=changed, future_exogenous=future,
+        )
+        pd.testing.assert_series_equal(predicted, second)
+        _, other_scenario = forecast_reservoir_snarimax(
+            self.history, **self.kwargs, exogenous=features, future_exogenous=future + 1,
+        )
+        self.assertFalse(np.allclose(predicted, other_scenario))
+
+    def test_exogenous_dates_columns_and_coverage_must_match(self):
+        training, forecast = forecast_reservoir_snarimax(self.history, **self.kwargs)
+        features = pd.DataFrame({"weather": 0.5}, index=training.index)
+        future = pd.DataFrame({"weather": 0.5}, index=forecast.index)
+        invalid_training = features.copy()
+        invalid_training.iloc[0, 0] = np.nan
+        for train_x, future_x, message in (
+            (features, None, "both training and future"),
+            (None, future, "both training and future"),
+            (features, future.iloc[:-1], "match every forecast week"),
+            (features, future.rename(columns={"weather": "other"}), "columns must match"),
+            (invalid_training, future, "missing or invalid features"),
+        ):
+            with self.subTest(message=message):
+                with self.assertRaisesRegex(ValueError, message):
+                    forecast_reservoir_snarimax(
+                        self.history, **self.kwargs, exogenous=train_x, future_exogenous=future_x,
+                    )
