@@ -8,9 +8,21 @@ import streamlit as st
 from dashboard.load_data import load_data_or_stop
 from dashboard.reservoir_analysis import plot_reservoir_spectrogram, plot_reservoir_stl
 from dashboard.reservoir_views import area_controls
+from dashboard.interactive import analysis_figure
 
 st.set_page_config(page_title="Reservoir Analysis", layout="wide")
-st.title("Reservoir Analysis")
+st.title("Analyses")
+choice = st.segmented_control("Analysis", ["Reservoir patterns", "Weather anomalies", "Weather & filling"],
+                              default="Reservoir patterns", key="analysis_kind")
+if choice == "Weather anomalies":
+    from dashboard.weather_page import render_weather
+    render_weather()
+    st.stop()
+if choice == "Weather & filling":
+    from dashboard.correlation_page import render_correlation
+    render_correlation()
+    st.stop()
+
 st.write("Explore seasonal patterns in weekly reservoir filling with STL and a spectrogram.")
 
 history = load_data_or_stop()
@@ -72,7 +84,7 @@ with stl_tab:
     except ValueError as exc:
         st.info(str(exc))
     else:
-        st.pyplot(figure)
+        st.plotly_chart(analysis_figure(figure), width="stretch")
         plt.close(figure)
         st.caption("Filling and trend are percentages; seasonal and residual components are percentage points (pp).")
 
@@ -104,7 +116,7 @@ with spectrum_tab:
         except ValueError as exc:
             st.info(str(exc))
         else:
-            st.pyplot(figure)
+            st.plotly_chart(analysis_figure(figure), width="stretch")
             plt.close(figure)
         st.caption(
             "1 cycle per 52-week year represents an annual pattern. Colours show power relative "

@@ -1,18 +1,26 @@
 import streamlit as st
 
-st.set_page_config(
-    page_title="Reservoir Dashboard",
-    layout="wide"
-)
+from dashboard.theme import apply_theme
 
-st.title("Norwegian Reservoir Dashboard")
-st.write(
-    "This app presents historical data about Norwegian reservoir "
-    "levels, capacity and stored energy, downloaded directly from NVE's API. "
-    "Open Data Table or Data Plot to choose a period and area. "
-    "Area choices are shared with Weather Analysis, where ERA5 weather data "
-    "can be loaded for the selected region. Reservoir Analysis shows STL and a "
-    "spectrogram of weekly filling for the same area. Reservoir API explains "
-    "the source and geographical areas. Cross Border Transfers shows curated "
-    "ENTSO-E import/export data read from MongoDB."
-)
+st.set_page_config(page_title="Reservoir Dashboard", page_icon="💧", layout="wide")
+apply_theme()
+st.logo("data/geography/dashboard-wordmark.svg", size="large")
+
+# Hidden routes preserve existing bookmarked URLs while the visible menu follows
+# the approved task-based sketch. All routes still use the real shared readers.
+page = st.navigation({
+    "": [st.Page("pages/0_Home.py", title="Home", icon=":material/home:", default=True)],
+    "Explore": [
+        st.Page("pages/1_Data_Table.py", title="Reservoirs", icon=":material/show_chart:"),
+        st.Page("pages/5_Cross_Border_Transfers.py", title="Transfers", icon=":material/swap_horiz:"),
+    ],
+    "Analyse": [st.Page("pages/3_Reservoir_Analysis.py", title="Analyses", icon=":material/analytics:")],
+    "Predict": [st.Page("pages/8_Forecast.py", title="Forecast", icon=":material/trending_up:")],
+    "Project": [
+        st.Page("pages/7_About.py", title="Sources & about", icon=":material/info:"),
+        st.Page("pages/2_Data_Plot.py", title="Data Plot", visibility="hidden"),
+        st.Page("pages/4_Weather_Analysis.py", title="Weather Analysis", visibility="hidden"),
+        st.Page("pages/6_Reservoir_API.py", title="Reservoir API", visibility="hidden"),
+    ],
+}, expanded=True)
+page.run()

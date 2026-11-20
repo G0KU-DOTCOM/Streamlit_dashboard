@@ -142,6 +142,7 @@ class WeatherPageTests(unittest.TestCase):
 
     def test_all_and_national_selections_show_no_stale_weather(self):
         app = AppTest.from_file(str(ROOT / 'main.py')).run()
+        app.session_state['nve_area_number_EL'] = None
         app.switch_page('pages/4_Weather_Analysis.py').run()
         self.assert_ok(app)
         self.assertTrue(any('Choose a single area' in item.value for item in app.info))

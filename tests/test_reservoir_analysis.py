@@ -107,6 +107,8 @@ class ReservoirAnalysisTests(unittest.TestCase):
 
     def test_all_areas_and_area_without_data_do_not_produce_combined_analyses(self):
         app = AppTest.from_file(str(ROOT / 'main.py')).run()
+        # Home now starts with the evaluated NO3 example; explicitly test All.
+        app.session_state['nve_area_number_EL'] = None
         app.switch_page('pages/3_Reservoir_Analysis.py').run()
         self.assert_ok(app)
         self.assertTrue(any('Choose one area' in item.value for item in app.info))

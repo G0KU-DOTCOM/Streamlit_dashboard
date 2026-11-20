@@ -32,7 +32,7 @@ def remember_selection(key, widget_key):
     st.session_state[key] = st.session_state[widget_key]
 
 
-def area_controls(view, history):
+def area_controls(view, history, *, compact=False):
     """Share area type and concrete area across reservoir and weather pages."""
     area_type = st.session_state.get("nve_area_type", "EL")
     st.session_state["nve_area_type"] = area_type if area_type in ("EL", "NO", "VASS") else "EL"
@@ -42,11 +42,12 @@ def area_controls(view, history):
         index=["EL", "NO", "VASS"].index(st.session_state["nve_area_type"]),
         key=area_key, on_change=remember_selection, args=("nve_area_type", area_key),
     )
-    st.caption({
-        "EL": "Electricity price areas.",
-        "NO": "Norway as a whole (area number 0).",
-        "VASS": "NVE watercourse regions.",
-    }[area_type])
+    if not compact:
+        st.caption({
+            "EL": "Electricity price areas.",
+            "NO": "Norway as a whole (area number 0).",
+            "VASS": "NVE watercourse regions.",
+        }[area_type])
     # Include known areas without observations so their absence remains visible.
     numbers = history.loc[history["area_type"].eq(area_type), "area_number"].unique()
     labels = {number: f"{area_type}{number}" for number in sorted(numbers)}
@@ -66,12 +67,19 @@ def area_controls(view, history):
         saved_number = default_number
     st.session_state[saved_key] = saved_number
     widget_key = f"_{saved_key}_{view}"
+    # Map clicks update the persistent choice outside this widget's callback.
+    # Synchronise before instantiating the widget so its retained frontend value
+    # cannot override that external selection on the next rerun.
+    external_selection = widget_key in st.session_state and st.session_state[widget_key] != saved_number
+    if external_selection:
+        st.session_state[widget_key] = saved_number
     area_number = st.selectbox(
-        "Choose area", options=options, index=options.index(saved_number),
+        "Choose area", options=options, index=None if external_selection else options.index(saved_number),
         format_func=lambda number: "All areas" if number is None else labels[number],
         key=widget_key, on_change=remember_selection, args=(saved_key, widget_key),
     )
-    st.caption("Area choices are shared by the reservoir and weather pages.")
+    if not compact:
+        st.caption("Area choices are shared by the reservoir and weather pages.")
     return area_type, area_number, labels
 
 
@@ -99,7 +107,7 @@ def reservoir_controls(view):
         selected = selected.loc[selected["area_number"].eq(area_number)]
         labels = {area_number: labels[area_number]}
     st.caption(
-        "The reservoir period is shared by Data Table and Data Plot. "
+        "The reservoir display period is retained across the overview and data views. "
         "It filters cached NVE history after download."
     )
     missing = [name for number, name in labels.items() if not selected["area_number"].eq(number).any()]

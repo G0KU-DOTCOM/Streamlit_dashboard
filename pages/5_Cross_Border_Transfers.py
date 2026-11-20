@@ -2,6 +2,8 @@ from calendar import month_name
 from datetime import datetime
 
 import streamlit as st
+import plotly.graph_objects as go
+from dashboard.theme import style_figure
 
 from dashboard.transfers import (
     OSLO, complete_hours, line_figure, load_flows, month_lines,
@@ -40,7 +42,10 @@ with left:
         elif totals.sum() == 0:
             st.info('Both directions report zero energy. Percentage shares are undefined.')
         else:
-            st.pyplot(pie_figure(totals), clear_figure=True)
+            pie = go.Figure(go.Pie(labels=['Import to Norway', 'Export from Norway'],
+                                   values=totals.to_list(), hole=.45, textinfo='percent',
+                                   marker_colors=['#2166b5', '#a8c9e8']))
+            st.plotly_chart(style_figure(pie, height=360))
             st.write(f'Import: **{totals.import_mwh:,.0f} MWh** · Export: **{totals.export_mwh:,.0f} MWh**')
             st.caption('Shares of total energy in both directions. Month choices affect only the line plot.')
 with right:
@@ -62,7 +67,13 @@ with right:
             if valid < len(expected):
                 st.warning('Some hours are missing or incomplete. Available values are shown; gaps are not zeros.')
             if selected.notna().any().any():
-                st.pyplot(line_figure(frame, months), clear_figure=True)
+                chart = go.Figure()
+                for name, label in [('import_mwh', 'Import to Norway'), ('export_mwh', 'Export from Norway')]:
+                    chart.add_trace(go.Scatter(x=selected.index, y=selected[name], name=label,
+                                               mode='lines', connectgaps=False))
+                style_figure(chart, y_title='Hourly mean power (MW)')
+                chart.update_xaxes(title='Time (UTC)')
+                st.plotly_chart(chart)
                 st.caption('Hourly averages smooth short peaks. Gaps separate excluded months and missing measurements.')
             else:
                 st.info('No complete hourly measurements are available for these months yet.')

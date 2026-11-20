@@ -22,17 +22,24 @@ the app's MongoDB credentials in Streamlit Cloud Secrets when hosting it.
 
 ## App pages
 
-- **Data Table:** reservoir measurements and weekly trends for selected areas.
-- **Data Plot:** reservoir curves using the same period and area selection.
-- **Reservoir Analysis:** STL and Spectrogram tabs for weekly filling, with a
-  shared area choice and a separate multi-year analysis period.
-- **Weather Analysis:** ERA5 regional means and explicit download controls.
-  SPC and LOF tabs show temperature outliers and anomalies,
-  with adjustable parameters, plots, counts and flagged-hour tables.
-- **Cross Border Transfers:** MongoDB import/export data with connection, year
-  and month choices. The annual pie is separate from the selected-month curves.
-- **Reservoir API:** NVE source details and geographical definitions.
-- **About:** project context and limitations.
+- **Home:** blue map and area selector, observed filling and routes to the main
+  tasks. Map clicks and selectors store the same region. The map observation
+  week is also the final forecast training week; horizon is shared as well.
+- **Explore → Reservoirs:** measurement curves, area summaries with weekly
+  sparklines and detailed observations, combining the previous data pages.
+- **Explore → Transfers:** bounded MongoDB reads with interactive import/export
+  charts and local connection, year and month controls.
+- **Analyse → Analyses:** reservoir STL/spectrogram, weather SPC/LOF with
+  temperature or precipitation, and lagged sliding-window weather correlation.
+- **Predict → Forecast:** recursive River SNARIMAX, editable model orders,
+  training length and horizon, optional historical weather scenarios, forecast
+  animation and error comparisons when later observations exist.
+- **Project → Sources & about:** source definitions, limitations, time alignment
+  and a cached EUR/NOK and USD/NOK downloader.
+
+The layout follows the blue sketch in the Part 4 notebook. Native Streamlit
+navigation preserves page links and keyboard controls. Previous Data Plot,
+Weather Analysis and Reservoir API URLs remain registered as hidden routes.
 
 ## Data and limitations
 
@@ -64,6 +71,9 @@ The Part 4 notebook also uses `data/weather/NO3_era5_2023-2025_hourly_sample100.
 for correlation and forecast experiments. It covers the same 100 NO3 locations
 in all three years. The notebook compares this sample with the 1,000-point
 summary in 2024.
+Forecast scenarios use only previous-week weather covered by the selected
+training period. Missing weather stops that scenario with a useful message;
+the app never substitutes actual future weather or downloads it automatically.
 Weather attribution: Open-Meteo / ERA5,
 [CC BY 4.0](https://open-meteo.com/en/licence). Boundaries: [NVE Atlas](https://atlas.nve.no).
 
@@ -86,6 +96,14 @@ writes. Restarting the app clears its in-memory caches.
   curation, MongoDB and the transfer page.
 - [Part 3](notebooks/prosjekt_part3.ipynb): sampled regions, ERA5 downloads,
   SPC/LOF, STL and spectrogram analyses with function tests.
+- [Part 4](notebooks/prosjekt_part4.ipynb): exchange rates, time alignment,
+  weekly correlation, chronological SNARIMAX comparisons and the design sketch.
+
+The app loads precomputed price-area and national GeoJSON converted from the
+saved NVE shapefiles. Water-area geometry remains unavailable until its
+equivalence to Magasinstatistikk's regions is verified; VASS data remain
+selectable without drawing an unverified outline. Map weather colouring is
+still outstanding. The map currently offers selection and weekly filling.
 
 Shared app and analysis functions are in `dashboard/`; local collection and
 database tools are in `pipeline/`. `entsoe_plan.json` defines the frozen
