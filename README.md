@@ -1,13 +1,16 @@
 # Norwegian Reservoir Dashboard
 
-IND320 project: reservoir statistics from NVE, electricity transfers from
-ENTSO-E through Spark/Cassandra and MongoDB, and ERA5 weather analysis.
+IND320 project: NVE reservoir statistics, ENTSO-E electricity transfers through
+Spark/Cassandra and MongoDB, Open-Meteo ERA5 weather analysis, Norges Bank
+exchange rates and weekly River SNARIMAX forecasts.
 
 ## Run the app
 
-Use Python 3.12. From the project folder:
+Use Python 3.12. From a fresh clone, create the local environment and install
+the dependencies before starting the app:
 
 ```bash
+python3.12 -m venv .venv
 .venv/bin/python -m pip install -r requirements.txt
 .venv/bin/python -m streamlit run main.py
 ```
@@ -40,15 +43,18 @@ the app's MongoDB credentials in Streamlit Cloud Secrets when hosting it.
 The layout follows the blue sketch in the Part 4 notebook. Native Streamlit
 navigation preserves page links and keyboard controls. Previous Data Plot,
 Weather Analysis and Reservoir API URLs remain registered as hidden routes.
+Charts use Plotly, including the forecast animation. The clickable GeoJSON
+map uses Folium through `streamlit-folium`. The notebook's Matplotlib reference
+calculations are retained; the app adapts their analysis results to Plotly.
 
 ## Data and limitations
 
 **Reservoirs:** NVE history is cached for 24 hours and area descriptions for
 7 days. Responses are limited to 8 MiB and 128 KiB respectively. Period choices
 filter the downloaded history locally. NVE's inspected API schema documents
-no date-range parameters; upstream interval filtering from the Part 2 task
-remains unimplemented. The user chose to retain this documented fallback;
-instructor acceptance has not been established. Missing weeks stay missing.
+no date-range parameters. Upstream interval filtering remains a documented
+Part 2 limitation; the app filters the cached response locally. Missing weeks
+stay missing.
 
 **Weather:** `data/geography/` contains the Atlas shapefiles and
 `weather_locations.csv`, with 1000 sampled locations per region. Electricity
@@ -56,10 +62,10 @@ areas are NO1–NO5. The assignment's other groups are East (RS+RØ), West (RV)
 and North (RM+RN); these group NVE administrative regions, not detailed
 hydrological catchments. No national or separate VASS4 weather sample exists.
 
-The teacher clarified that the DCT/SPC analysis should use temperature,
-despite the original assignment text mentioning precipitation. Both SPC and
-LOF therefore analyse temperature. Temperature and precipitation are still
-downloaded as required by the data-collection task.
+Part 3 used temperature for DCT/SPC following the teacher's clarification.
+Part 4 makes temperature and precipitation selectable for both SPC and LOF;
+temperature remains the default. Flagged observations are statistically
+unusual under the selected method, rather than necessarily data errors.
 
 `data/weather/NO3_era5_2024-01-01_2024-12-31_hourly.csv.gz` contains 8784 UTC
 hours of ERA5 means across the 1000 NO3 locations. Temperature is in °C;
@@ -87,6 +93,26 @@ The transfer page reads MongoDB directly using the `(connection, time_utc)`
 index. One connection/year is limited to 8784 documents and 2 MiB decoded
 BSON, cached for 24 hours; month changes reuse it. The page makes no database
 writes. Restarting the app clears its in-memory caches.
+
+**Forecasts:** Home starts with NO3, the evaluated example. The forecast starts
+with 104 training weeks, a 12-week horizon and filling history alone, using
+`p=1, d=1, q=1, m=52, sp=1, sd=0, sq=0`. These orders were selected across
+four 2025 development cutoffs; the 2026 checks showed seasonal variation.
+Historical evaluation displays MAE and RMSE in percentage points and a
+last-value reference when later observations exist. This does not establish
+equal accuracy for other areas or periods.
+
+The shared map date is the final training observation date. A date between
+observations uses the latest available observation on or before it. The
+reservoir overview period and weather year remain separate controls. Exact
+first-availability and revision histories are not retained, so the historical
+checks use observation-based cutoffs. The notebook documents time zones,
+publication delays and the approved historical-week-means weather scenario.
+
+**Exchange rates:** EUR/NOK and USD/NOK spot quotes are requested together for
+an inclusive calendar-date interval. The app caches successful reads for
+24 hours. Dates without published quotes remain absent; rates are not used
+as inputs to the current forecast interface.
 
 ## Notebooks and local pipeline
 
@@ -141,10 +167,17 @@ not make the full database notebook reproducible after cloning.
 The ordinary tests use fixtures and make no live API/database requests.
 Set `RUN_SPARK_TESTS=1` to include the optional local Spark math checks.
 
-The Part 3 work log and screencast are complete, and the video link is in the
-notebook. All notebook cells have been run, and the hosted app has been checked.
-The remaining submission step is to export the notebook via HTML to PDF and
-check that plots, tables and links are readable.
+Parts 1–3 contain work logs, and the Part 3 screencast is linked in its notebook.
+The saved code cells in all four notebooks have executed outputs without
+error outputs; this does not mean every notebook can run from a fresh clone
+without the local data and services described above.
+
+Part 4's blue app layout, interactive charts, correlation view, forecast
+interface and exchange-rate reader are published. The remaining work includes
+verified VASS map outlines, map weather colouring, the 300–500-word Part 4
+work log, the 10–12-minute screencast and the final PDF export and readability
+check. The video should show the presenter's face and cover app interaction,
+design, data storage/transfer, caching, progress feedback and lessons learned.
 
 ## Links
 
