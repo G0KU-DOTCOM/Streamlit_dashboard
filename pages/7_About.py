@@ -63,8 +63,8 @@ st.write(
 st.markdown(
     "[Project repository](https://github.com/G0KU-DOTCOM/Streamlit_dashboard) · "
     "[Part 4 notebook](https://github.com/G0KU-DOTCOM/Streamlit_dashboard/blob/main/notebooks/prosjekt_part4.ipynb). "
-    "The notebooks document methods, checks and AI assistance. Part 4's final work log and "
-    "submission video are still being prepared."
+    "The notebooks document methods, checks, AI assistance and work logs. "
+    "[Watch the Part 4 screencast](https://nmbu.cloud.panopto.eu/Panopto/Pages/Viewer.aspx?id=0d78306a-ab11-4531-969d-b50d00ccca8b)."
 )
 
 with st.expander("Data reuse and waiting time"):

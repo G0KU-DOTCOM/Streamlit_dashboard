@@ -167,17 +167,22 @@ not make the full database notebook reproducible after cloning.
 The ordinary tests use fixtures and make no live API/database requests.
 Set `RUN_SPARK_TESTS=1` to include the optional local Spark math checks.
 
-Parts 1–3 contain work logs, and the Part 3 screencast is linked in its notebook.
+All four notebooks contain work logs. Part 4 includes a log within the required
+300–500-word range covering the notebook experiments, Streamlit implementation
+and correlation findings. Its AI-use statement describes Codex's role in code,
+analysis and writing, and the work log explicitly identifies its AI drafting.
+The completed Part 4 screencast is linked under **Video** at the top of its
+notebook and is available [on Panopto](https://nmbu.cloud.panopto.eu/Panopto/Pages/Viewer.aspx?id=0d78306a-ab11-4531-969d-b50d00ccca8b).
 The saved code cells in all four notebooks have executed outputs without
 error outputs; this does not mean every notebook can run from a fresh clone
 without the local data and services described above.
 
 Part 4's blue app layout, interactive charts, correlation view, forecast
-interface and exchange-rate reader are published. The remaining work includes
-verified VASS map outlines, map weather colouring, the 300–500-word Part 4
-work log, the 10–12-minute screencast and the final PDF export and readability
-check. The video should show the presenter's face and cover app interaction,
-design, data storage/transfer, caching, progress feedback and lessons learned.
+interface and exchange-rate reader are published. The remaining app work is
+verified VASS map outlines and weather-based map colouring.
+The [Part 4 HTML export](notebooks/prosjekt_part4.html) includes the saved
+outputs, embedded plots and sketches, work log and screencast link. Regenerate
+the export whenever the notebook changes.
 
 ## Links
 
