@@ -54,9 +54,11 @@ st.write(
     "coverage are explained on the relevant pages."
 )
 st.write(
-    "The map currently supports price-area and national outlines, with selection or filling-based "
-    "colouring. VASS data can be selected, but verified VASS map outlines and map weather colouring "
-    "are still outstanding. The evaluated forecast settings are based on NO3 and should not be "
+    "The VASS map uses Part 3's grouped NVE administrative regions as overview outlines, "
+    "rather than detailed hydrological catchments. Only VASS1–VASS3 have published observations; "
+    "VASS4 has no values or separate outline. Weather colours require a complete saved week; "
+    "grey means missing data, and an explicit button prepares weather for the selected area and week. "
+    "The evaluated forecast settings are based on NO3 and should not be "
     "assumed to work equally well in every area or season. Weather scenarios require saved data "
     "covering the selected training weeks; missing coverage produces a message."
 )
@@ -95,7 +97,7 @@ with st.expander("Model evaluation and time alignment"):
     st.write(
         "The map week and last forecast training week share session state. "
         "The reservoir overview period, weather year and analysis parameters have their own meanings. "
-        "Water-area boundaries are not drawn until the match with NVE's reservoir areas is verified."
+        "The VASS map uses the grouped overview regions from Part 3."
     )
 
 with st.expander("EUR/NOK and USD/NOK exchange rates"):

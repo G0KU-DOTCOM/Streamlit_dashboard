@@ -125,11 +125,21 @@ as inputs to the current forecast interface.
 - [Part 4](notebooks/prosjekt_part4.ipynb): exchange rates, time alignment,
   weekly correlation, chronological SNARIMAX comparisons and the design sketch.
 
-The app loads precomputed price-area and national GeoJSON converted from the
-saved NVE shapefiles. Water-area geometry remains unavailable until its
-equivalence to Magasinstatistikk's regions is verified; VASS data remain
-selectable without drawing an unverified outline. Map weather colouring is
-still outstanding. The map currently offers selection and weekly filling.
+The app loads price-area, national and VASS overview GeoJSON converted from
+the saved NVE shapefiles. Run `python -m pipeline.export_water_areas` to rebuild
+the VASS layer using Part 3's grouping: East = RS + RØ, West = RV, and
+Mid/North = RM + RN. These are grouped NVE administrative overview outlines,
+not detailed hydrological catchments. The published NVE history contains
+VASS1–VASS3; VASS4 appears in metadata but has no observations or separate
+map outline.
+
+Map clicks highlight and retain the selected area. Colours can show selection,
+weekly filling, weekly mean temperature or weekly precipitation. Weather uses
+complete Oslo calendar weeks and the largest complete saved location sample
+for each area and week; samples are never blended within a week. Grey means
+missing data. An explicit button prepares missing weather for the selected
+area and week using its 1000 saved locations, with progress feedback and
+reusable summaries. No national or separate VASS4 weather sample is defined.
 
 Shared app and analysis functions are in `dashboard/`; local collection and
 database tools are in `pipeline/`. `entsoe_plan.json` defines the frozen
@@ -177,9 +187,9 @@ The saved code cells in all four notebooks have executed outputs without
 error outputs; this does not mean every notebook can run from a fresh clone
 without the local data and services described above.
 
-Part 4's blue app layout, interactive charts, correlation view, forecast
-interface and exchange-rate reader are published. The remaining app work is
-verified VASS map outlines and weather-based map colouring.
+Part 4 includes the blue app layout, interactive charts, correlation view,
+forecast interface, exchange-rate reader, VASS overview map and weather-based
+map colouring. Local changes reach the hosted app after being pushed to main.
 The [Part 4 HTML export](notebooks/prosjekt_part4.html) includes the saved
 outputs, embedded plots and sketches, work log and screencast link. Regenerate
 the export whenever the notebook changes.
