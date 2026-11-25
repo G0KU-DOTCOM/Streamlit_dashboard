@@ -191,7 +191,7 @@ Part 4 includes the blue app layout, interactive charts, correlation view,
 forecast interface, exchange-rate reader, VASS overview map and weather-based
 map colouring. Local changes reach the hosted app after being pushed to main.
 The [Part 4 HTML export](notebooks/prosjekt_part4.html) includes the saved
-outputs, embedded plots and sketches, work log and screencast link. Regenerate
+outputs, embedded plots and the design sketch, work log and screencast link. Regenerate
 the export whenever the notebook changes.
 
 ## Links
